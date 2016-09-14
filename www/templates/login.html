@@ -1,18 +1,25 @@
-<ion-view view-title="Login" align-title="left">
-    <ion-content>
-        <div class="hero no-header flat">
-        </div>
-        <div class="list">
-            <ion-md-input placeholder="Username" highlight-color="balanced" type="text"></ion-md-input>
-            <ion-md-input placeholder="Password" highlight-color="energized" type="password"></ion-md-input>
-        </div>
-        <div class="padding">
-            <button ui-sref="app.profile" class="button button-full button-assertive ink">Login</button>
-        </div>
-        <div class="button-bar social-login">
-            <button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
-            <button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>
-            <button class="button button-small button-border icon-left ion-social-facebook button-positive-900">Facebook</button>
-        </div>
-    </ion-content>
+<ion-view title="Login" hide-nav-bar="true" id="page16" style="background-color:#;" class=" ">
+   <ion-content class="has-header" scroll="true" padding="true" style="background: url(../www/img/login.jpg) center; background-size: cover;">
+      <h2 id="signup-heading2" style="color:#000000;font-weight:400;text-align:center;" class=" "><img style="text-align:center;" src ='../www/img/icon.png' alt="Login" /></h2>
+      <form class="list animated bounceIn " name="loginform" class="css-form" novalidate id="login-form7" ng-submit="">
+         <ion-list class=" " id="login-list5">
+            <ion-md-input placeholder="Username" highlight-color="balanced" type="text" ng-model="data.username" name="username"></ion-md-input>
+            <div ng-show="loginform.$submitted || loginform.username.$touched">
+               <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.username.$error.required">Please enter User name.</div>
+            </div>
+            <ion-md-input placeholder="Password" highlight-color="energized" type="password" ng-model="data.password" name="password"></ion-md-input>
+            <div ng-show="loginform.$submitted || loginform.password.$touched">
+               <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.password.$error.required">Please enter Password.</div>
+            </div>
+         </ion-list>
+         <div style="height: 40px;" class="spacer"></div>
+         <input  class="button button-block button-assertive-900" ui-sref="app.profile" ng-click="loginform.$valid && login(data)" type="submit" id="login-button13" value="Login"/>
+         <div class="button-bar">
+	          <button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
+	          <button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>
+	          <button class="button button-small button-border icon-left ion-social-facebook button-positive-900" ng-click="loginFacebook()">Facebook</button>
+	     </div>
+         <div style="height: 40px;" class="spacer"></div>
+      </form>
+   </ion-content>
 </ion-view>
