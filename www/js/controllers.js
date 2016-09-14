@@ -1,6 +1,10 @@
-angular.module('starter').controller('DashCtrl', function($scope) {
-
-    }).controller('ChatsCtrl', function($scope, Chats) {
+angular.module('starter').controller('DashCtrl', function($scope, $state) {
+		 $scope.logout = function(chat) {
+	     	$state.go('login', {}, {
+	             reload: true
+	         });
+	     };
+    }).controller('ChatsCtrl', function($scope, Chats, $state) {
         // With the new view caching in Ionic, Controllers are only called
         // when they are recreated or on app start, instead of every page change.
         // To listen for when this page is active (for example, to refresh data),
@@ -12,6 +16,20 @@ angular.module('starter').controller('DashCtrl', function($scope) {
         $scope.chats = Chats.all();
         $scope.remove = function(chat) {
             Chats.remove(chat);
+        };
+        $scope.logout = function(chat) {
+        	$state.go('login', {}, {
+                reload: true
+            });
+        };
+    }).controller('loginCtrl', function($scope, $state) {
+        $scope.data = {};
+        $scope.login = function(data) {
+        	if(data.username ==='Abhinav' && data.password ==='123123'){
+        		$state.go('tab.dash', {}, {
+                    reload: true
+                });
+        	}
         };
     }).controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
         $scope.chat = Chats.get($stateParams.chatId);
@@ -63,8 +81,14 @@ angular.module('starter').controller('DashCtrl', function($scope) {
         $scope.messages = [];
 
     })
-    .controller('AccountCtrl', function($scope) {
+    .controller('AccountCtrl', function($scope,$state) {
         $scope.settings = {
             enableFriends: true
         };
+        $scope.logout = function(chat) {
+        	$state.go('login', {}, {
+                reload: true
+            });
+        };
+        
     });

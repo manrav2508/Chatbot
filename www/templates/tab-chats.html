@@ -1,4 +1,9 @@
-<ion-view view-title="Chats" ng-controller="Messages" >
+<ion-view view-title="Barclays ChatBot" ng-controller="Messages" >
+ <ion-nav-buttons side="right">
+	   <div class="paddingTop">
+	     <button class="button-icon ion-log-out flat" ng-click="logout()"></button>
+	   </div>
+   </ion-nav-buttons>
 <ion-pane "class="messaging-view">
     <ion-header-bar class="bar-calm">
       <h1 class="title">Barclays ChatBot</h1>
@@ -11,14 +16,14 @@
            class="messages">
 
         <div class="message" ng-class="{'slide-right': hideTime, '': !hideTime}">
-          <span>{{ message.text }}</span>
+          <span>{{message.text}}</span>
         </div>
         <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}">{{message.time}}</div>
       </div>
     </ion-content>
      <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
       <label class="item-input-wrapper">
-        <input type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
+        <input type="text" placeholder="Type your message" autofocus='true' on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
       </label>
       <button class="button button-clear" ng-click="sendMessage()">
         Send

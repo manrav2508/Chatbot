@@ -1,4 +1,9 @@
 <ion-view view-title="Account">
+<ion-nav-buttons side="right">
+	   <div class="paddingTop">
+	     <button class="button-icon ion-log-out flat" ng-click="logout()"></button>
+	   </div>
+   </ion-nav-buttons>
   <ion-content>
     <ion-list>
     <ion-toggle  ng-model="settings.enableFriends">

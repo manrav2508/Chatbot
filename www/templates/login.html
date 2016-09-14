@@ -1,0 +1,32 @@
+<ion-view title="Login" hide-nav-bar="true" id="page16" style="background-color:#;" class=" ">
+   <ion-content class="has-header" scroll="true" padding="true">
+      <h2 id="signup-heading2" style="color:#000000;font-weight:400;text-align:center;" class=" "><img style="text-align:center;" src ='../www/img/icon.png' alt="Login" /></h2>
+      <form class="list animated bounceIn " name="loginform" class="css-form" novalidate id="login-form7" ng-submit="">
+         <ion-list class=" " id="login-list5">
+            <label id="login-input15" class="item item-input ">
+            <span class="input-label">Username</span>
+            <input placeholder="" autocapitalize="none" required=""  type="text" ng-model="data.username" name="username">
+            </label>
+            <div ng-show="loginform.$submitted || loginform.username.$touched">
+               <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.username.$error.required">Please enter User name.</div>
+            </div>
+            <label id="login-input16" class="item item-input ">
+            <span class="input-label">Password</span>
+            <input placeholder="" required=""  type="password" ng-model="data.password" name="password">
+            </label>
+            <div ng-show="loginform.$submitted || loginform.password.$touched">
+               <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.password.$error.required">Please enter Password.</div>
+            </div>
+         </ion-list>
+         <div style="height: 40px;" class="spacer"></div>
+         <input  class="button button-block button-assertive-900" ng-click="loginform.$valid && login(data)" type="submit" id="login-button13" value="Login"/>
+         <div style="height: 40px;" class="spacer"></div>
+         <div class="button-bar social-login">
+	          <button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
+	          <button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>
+	          <button class="button button-small button-border icon-left ion-social-facebook button-positive-900" ng-click="loginFacebook()">Facebook</button>
+	     </div>
+      </form>
+      <a ui-sref="signup" id="login-button2" class="button button-positive button-block button-clear ">Signup</a>
+   </ion-content>
+</ion-view>
