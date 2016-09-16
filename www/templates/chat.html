@@ -1,14 +1,18 @@
 <ion-view view-title="Chat">
-   <ion-content ng-class="{expanded:isExpanded}">
-      <ol scroll="true" class="chat list animate-fade-slide-in-right">
-         <li ng-repeat="message in messages" ng-class="{other :  message.userId != myId, self : message.userId == myId}">
-            <div class="avatar"><img src="{{message.image}}" draggable="false"/></div>
-            <div class="msg">
-               <p>{{message.text}}</p>
-               <time>{{message.time}}</time>
-            </div>
-         </li>
-      </ol>
+   <ion-content ng-class="{expanded:isExpanded}" >
+   <div  ng-repeat="message in messages" class="item card-item self">
+       <div class="card stable-bg ink ink-dark">
+           <div class="item item-avatar item-text-wrap">
+               <img class="avatar" src="{{message.image}}"></img>
+                {{message.text}}
+               <div class="card-footer text-right">
+                   <div class="pull-left">
+                       <i class="icon balanced ion-clock"></i> {{message.time}}
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
    </ion-content>
    <button ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
    <i class="icon ion-android-send"></i>

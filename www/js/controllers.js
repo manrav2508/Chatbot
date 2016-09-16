@@ -93,7 +93,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         var d = new Date();
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
         $scope.messages.push({
-        	image: '/www/img/arya.jpg',
+        	image: '../www/img/arya.jpg',
             userId:'12345',
             text: $scope.data.message,
             time: d
@@ -101,7 +101,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         if($scope.data.message == 'customerinfo'){
         	BarclaysService.fetchCustDetails().then(function(custDetails) {
                  $scope.messages.push({
-                	 image: '/www/img/icon.png',
+                	 image: '../www/img/icon.png',
                      userId: '54321',
                      text: custDetails,
                      time: d
@@ -115,7 +115,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         }
         else {
         	$scope.messages.push({
-            	image: '/www/img/icon.png',
+            	image: '../www/img/icon.png',
                 userId:'54321',
                 text: 'No keyword found : '+ $scope.data.message,
                 time: d
