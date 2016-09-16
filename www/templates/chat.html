@@ -4,7 +4,7 @@
        <div class="card stable-bg ink ink-dark">
            <div class="item item-avatar item-text-wrap">
                <img class="avatar" src="{{message.image}}"></img>
-                {{message.text}}
+               <p ng-bind-html="message.text"></p>
                <div class="card-footer text-right">
                    <div class="pull-left">
                        <i class="icon balanced ion-clock"></i> {{message.time}}

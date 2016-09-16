@@ -87,37 +87,84 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     ionicMaterialInk.displayEffect();
     $scope.hideTime = true;
     var alternate,
-    isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+        isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.sendMessage = function() {
         alternate = !alternate;
         var d = new Date();
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
         $scope.messages.push({
-        	image: '../www/img/arya.jpg',
-            userId:'12345',
+            image: '../www/img/arya.jpg',
+            userId: '12345',
             text: $scope.data.message,
             time: d
         });
-        if($scope.data.message == 'customerinfo'){
-        	BarclaysService.fetchCustDetails().then(function(custDetails) {
-                 $scope.messages.push({
-                	 image: '../www/img/icon.png',
-                     userId: '54321',
-                     text: custDetails,
-                     time: d
-                 });
-             }, function(err) {
-                 var alertPopup = $ionicPopup.alert({
-                     title: 'failed!',
-                     template: 'There is some proble to call API!'
-                 });
-             });
-        }
-        else {
-        	$scope.messages.push({
-            	image: '../www/img/icon.png',
-                userId:'54321',
-                text: 'No keyword found : '+ $scope.data.message,
+        if ($scope.data.message.toLowerCase() == 'c') {
+            BarclaysService.fetchCustDetails().then(function(custDetails) {
+                var accountDetails = "";
+                for (var i = 0; i < custDetails.accountList.length; i++) {
+                    accountDetails += "<div class='row'><strong>" + custDetails.accountList[i].accountType + "</strong></div>" + 
+                    "<div class='row'><strong>A/c no:</strong>" + custDetails.accountList[i].id + "</div>" + 
+                    "<div class='row'><strong>Bal:</strong>" + custDetails.accountList[i].currentBalance + "</div>"
+                }
+                var tabelresp = "Customer Details <BR> " + "<div class='row'><div class='col header'>Customer Name</div><div class='col'>" + custDetails.title + " " + custDetails.firstName + " " + custDetails.lastName + "</div></div>" + 
+                "<div class='row'><div class='col'>Contact Details</div><div class='col'>" + custDetails.mobileNo + "</div></div>" + 
+                "<div class='row'><div class='col'>DOB</div><div class='col'>" + new Date(custDetails.dateOfBirth) + "</div></div>" + 
+                "<div class='row'><div class='col'>Customer Address</div><div class='col'>" + custDetails.address.street + ", " + custDetails.address.town + "<br> " + custDetails.address.postalCode + ", " + custDetails.address.country + "</div></div>" +
+                "<div class='row'><div class='col'>Customer Accounts</div><div class='col'>" + accountDetails + "</div>";
+                $scope.messages.push({
+                    image: '../www/img/icon.png',
+                    userId: '54321',
+                    text: tabelresp,
+                    time: d
+                });
+                $ionicScrollDelegate.scrollBottom(true);
+            }, function(err) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'failed!',
+                    template: 'There is some proble to call API!'
+                });
+            });
+        } else if ($scope.data.message.toLowerCase() == 't') {
+            BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
+            	var tabelresp = "Transuction Details <BR> " + 
+            	"<div class='row'><div class='col'>Transuction ID</div><div class='col'>" + transDetails.id + "</div></div>" + 
+                "<div class='row'><div class='col'>Money In</div><div class='col'>" + transDetails.amount.moneyIn + "</div></div>" +
+                "<div class='row'><div class='col'>Money Out</div><div class='col'>" + transDetails.amount.moneyOut + "</div></div>" +
+                "<div class='row'><div class='col'>Payment Method</div><div class='col'>" + transDetails.paymentMethod+ "</div></div>" +
+                "<div class='row'><div class='col'>Balance After Transaction <BR></div><div class='col'>" + transDetails.accountBalanceAfterTransaction.amount+ "</div></div>";
+                $scope.messages.push({
+                    image: '../www/img/icon.png',
+                    userId: '54321',
+                    text: tabelresp,
+                    time: d
+                });
+                $ionicScrollDelegate.scrollBottom(true);
+            }, function(err) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'failed!',
+                    template: 'There is some proble to call API!'
+                });
+            });
+        } else if ($scope.data.message.toLowerCase() == 'a') {
+            BarclaysService.fetchAccountsDetails().then(function(accDetails) {
+                $scope.messages.push({
+                    image: '../www/img/icon.png',
+                    userId: '54321',
+                    text: 'Accounts Details <BR>' + accDetails,
+                    time: d
+                });
+                $ionicScrollDelegate.scrollBottom(true);
+            }, function(err) {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'failed!',
+                    template: 'There is some proble to call API!'
+                });
+            });
+        } else {
+            $scope.messages.push({
+                image: '../www/img/icon.png',
+                userId: '54321',
+                text: 'No keyword found : ' + $scope.data.message,
                 time: d
             });
         }
