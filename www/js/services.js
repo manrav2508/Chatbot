@@ -1,4 +1,4 @@
-angular.module('rbbr').service('CustomerService', function($q, $http) {
+angular.module('rbbr').service('BarclaysService', function($q, $http) {
 	var fetchCustDetails = function() {
         return $q(function(resolve, reject) {
             var req = {

@@ -1,22 +1,21 @@
 <ion-view view-title="Chat">
-    <ion-content ng-class="{expanded:isExpanded}">
-        <div class="content has-header messaging-view">
-            <div ng-repeat="message in messages"
-                ng-class="{other: message.userId != myId}"
-                class="messages">
-                <div class="message" ng-class="{'slide-right': hideTime, '': !hideTime}">
-                    <span>{{message.text}}</span>
-                </div>
-                <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}">{{message.time}}</div>
-            </div>
-        </div>
+    <ion-content scroll="false" ng-class="{expanded:isExpanded}">
+            <ol scroll="true" class="chat list animate-fade-slide-in-right">
+				<li ng-repeat="message in messages" ng-class="{other :  message.userId != myId, self : message.userId == myId}">
+					<div class="avatar"><img src="{{message.image}}" draggable="false"/></div>
+				  <div class="msg">
+					<p>{{message.text}}</p>
+					<time>{{message.time}}</time>
+				  </div>
+				</li>
+		    </ol>
+		    <button ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
+        	<i class="icon ion-android-send"></i>
+        </button>
         <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
             <label class="item-input-wrapper">
-            <input type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
+            <input class="message_input" type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
             </label>
-            <button class="button button-clear" ng-click="sendMessage()">
-            Send
-            </button>
         </ion-footer-bar>
     </ion-content>
 </ion-view>

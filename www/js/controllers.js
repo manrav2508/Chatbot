@@ -71,7 +71,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
-}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, CustomerService) {
+}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -93,21 +93,23 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         var d = new Date();
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
         $scope.messages.push({
-            userId: alternate ? '12345' : '54321',
+        	image: '/www/img/arya.jpg',
+            userId:'12345',
             text: $scope.data.message,
             time: d
         });
         if($scope.data.message == 'customerinfo'){
-        	CustomerService.fetchCustDetails().then(function(custDetails) {
+        	BarclaysService.fetchCustDetails().then(function(custDetails) {
                  $scope.messages.push({
+                	 image: '/www/img/icon.png',
                      userId: '54321',
                      text: custDetails,
                      time: d
                  });
              }, function(err) {
                  var alertPopup = $ionicPopup.alert({
-                     title: 'Login failed!',
-                     template: 'Please check your credentials!'
+                     title: 'failed!',
+                     template: 'There is some proble to call API!'
                  });
              });
         }
