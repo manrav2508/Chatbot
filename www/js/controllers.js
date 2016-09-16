@@ -90,6 +90,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.typing = false;
     $scope.sendMessage = function() {
+    	$ionicScrollDelegate.scrollBottom(true);
         alternate = !alternate;
         var d = new Date();
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
