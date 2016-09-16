@@ -87,7 +87,8 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     ionicMaterialInk.displayEffect();
     $scope.hideTime = true;
     var alternate,
-        isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+    isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+    $scope.typing = false;
     $scope.sendMessage = function() {
         alternate = !alternate;
         var d = new Date();
@@ -99,7 +100,9 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             time: d
         });
         if ($scope.data.message.toLowerCase() == 'c') {
+        	$scope.typing = true;
             BarclaysService.fetchCustDetails().then(function(custDetails) {
+            	$scope.typing = false;
                 var accountDetails = "";
                 for (var i = 0; i < custDetails.accountList.length; i++) {
                     accountDetails += "<div class='row'><strong>" + custDetails.accountList[i].accountType + "</strong></div>" + 
@@ -125,7 +128,9 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 });
             });
         } else if ($scope.data.message.toLowerCase() == 't') {
+        	$scope.typing = true;
             BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
+            	$scope.typing = false;
             	var tabelresp = "Transuction Details <BR> " + 
             	"<div class='row'><div class='col'>Transuction ID</div><div class='col'>" + transDetails.id + "</div></div>" + 
                 "<div class='row'><div class='col'>Money In</div><div class='col'>" + transDetails.amount.moneyIn + "</div></div>" +
@@ -146,7 +151,9 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 });
             });
         } else if ($scope.data.message.toLowerCase() == 'a') {
+        	$scope.typing = true;
             BarclaysService.fetchAccountsDetails().then(function(accDetails) {
+            	$scope.typing = false;
                 $scope.messages.push({
                     image: '../www/img/icon.png',
                     userId: '54321',
