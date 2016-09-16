@@ -1,21 +1,21 @@
 <ion-view view-title="Chat">
-    <ion-content scroll="false" ng-class="{expanded:isExpanded}">
-            <ol scroll="true" class="chat list animate-fade-slide-in-right">
-				<li ng-repeat="message in messages" ng-class="{other :  message.userId != myId, self : message.userId == myId}">
-					<div class="avatar"><img src="{{message.image}}" draggable="false"/></div>
-				  <div class="msg">
-					<p>{{message.text}}</p>
-					<time>{{message.time}}</time>
-				  </div>
-				</li>
-		    </ol>
-		    <button ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
-        	<i class="icon ion-android-send"></i>
-        </button>
-        <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
-            <label class="item-input-wrapper">
-            <input class="message_input" type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
-            </label>
-        </ion-footer-bar>
-    </ion-content>
+   <ion-content ng-class="{expanded:isExpanded}">
+      <ol scroll="true" class="chat list animate-fade-slide-in-right">
+         <li ng-repeat="message in messages" ng-class="{other :  message.userId != myId, self : message.userId == myId}">
+            <div class="avatar"><img src="{{message.image}}" draggable="false"/></div>
+            <div class="msg">
+               <p>{{message.text}}</p>
+               <time>{{message.time}}</time>
+            </div>
+         </li>
+      </ol>
+   </ion-content>
+   <button ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
+   <i class="icon ion-android-send"></i>
+   </button>	
+   <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+      <label class="item-input-wrapper">
+      <input class="message_input" type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
+      </label>
+   </ion-footer-bar>
 </ion-view>

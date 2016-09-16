@@ -87,7 +87,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     ionicMaterialInk.displayEffect();
     $scope.hideTime = true;
     var alternate,
-        isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+    isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.sendMessage = function() {
         alternate = !alternate;
         var d = new Date();
@@ -112,6 +112,14 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                      template: 'There is some proble to call API!'
                  });
              });
+        }
+        else {
+        	$scope.messages.push({
+            	image: '/www/img/icon.png',
+                userId:'54321',
+                text: 'No keyword found : '+ $scope.data.message,
+                time: d
+            });
         }
         delete $scope.data.message;
         $ionicScrollDelegate.scrollBottom(true);
