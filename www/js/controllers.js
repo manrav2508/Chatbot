@@ -71,7 +71,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
-}).controller('ChatCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
+}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, CustomerService) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -97,6 +97,20 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             text: $scope.data.message,
             time: d
         });
+        if($scope.data.message == 'customerinfo'){
+        	CustomerService.fetchCustDetails().then(function(custDetails) {
+                 $scope.messages.push({
+                     userId: '54321',
+                     text: custDetails,
+                     time: d
+                 });
+             }, function(err) {
+                 var alertPopup = $ionicPopup.alert({
+                     title: 'Login failed!',
+                     template: 'Please check your credentials!'
+                 });
+             });
+        }
         delete $scope.data.message;
         $ionicScrollDelegate.scrollBottom(true);
     };

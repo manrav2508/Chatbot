@@ -1,6 +1,6 @@
 <ion-view view-title="Chat" >
     <ion-content scroll="false" ng-class="{expanded:isExpanded}">
-        	<ol class="chat list animate-fade-slide-in-right">
+        	<ol scroll="true" class="chat list animate-fade-slide-in-right">
 				<li ng-repeat="message in messages" ng-class="{other :  message.userId != myId, self : message.userId == myId}">
 					<div class="avatar"><img src="http://i.imgur.com/HYcn9xO.png" draggable="false"/></div>
 				  <div class="msg">
