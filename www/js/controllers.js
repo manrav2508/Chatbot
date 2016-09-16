@@ -178,6 +178,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         }
         delete $scope.data.message;
         $ionicScrollDelegate.scrollBottom(true);
+        document.getElementById("message_input").focus();
     };
     $scope.inputUp = function() {
         if (isIOS) $scope.data.keyboardHeight = 216;
