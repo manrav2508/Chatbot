@@ -156,10 +156,18 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         	$scope.typing = true;
             BarclaysService.fetchAccountsDetails().then(function(accDetails) {
             	$scope.typing = false;
+            	var tabelresp = "Account Details <BR> " + 
+            	"<div class='row'><div class='col'>Account ID</div><div class='col'>" + accDetails.id + "</div></div>" + 
+            	"<div class='row'><div class='col'>Account Type</div><div class='col'>" + accDetails.accountType + "</div></div>" +
+                "<div class='row'><div class='col'>Account Description</div><div class='col'>" + accDetails.description + "</div></div>" +
+                "<div class='row'><div class='col'>Account Card Number</div><div class='col'>" + accDetails.card.cardNumber + "</div></div>" +
+                "<div class='row'><div class='col'>Account Card Current Balance</div><div class='col'>" + accDetails.card.currentBalance+ "</div></div>" + 
+                "<div class='row'><div class='col'>Account Card Type<BR></div><div class='col'>" + accDetails.card.type+ "</div></div>";
+               
                 $scope.messages.push({
                     image: '../www/img/icon.png',
                     userId: '54321',
-                    text: 'Accounts Details <BR>' + accDetails,
+                    text: tabelresp,
                     time: d
                 });
                 $ionicScrollDelegate.scrollBottom(true);

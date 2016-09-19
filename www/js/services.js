@@ -50,7 +50,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             }
             $http(req).then(function(data) {
                 if (data.data!==undefined) {
-                    resolve(data.data);
+                    resolve(data.data["credit card account"]);
                 } else {
                     reject('S Failed!');
                 }
