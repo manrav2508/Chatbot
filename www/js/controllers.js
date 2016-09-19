@@ -123,6 +123,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 });
                 $ionicScrollDelegate.scrollBottom(true);
             }, function(err) {
+            	$scope.typing = false;
                 var alertPopup = $ionicPopup.alert({
                     title: 'failed!',
                     template: 'There is some proble to call API!'
