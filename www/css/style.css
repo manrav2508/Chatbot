@@ -1,19 +1,16 @@
 .header .col {
-  background-color:lightgrey;
+    background-color: lightgrey;
 }
-
 .col {
-  border: solid 1px grey;
-  border-bottom-style: none;
-  border-right-style: none;
+    border: solid 1px grey;
+    border-bottom-style: none;
+    border-right-style: none;
 }
-
 .col:last-child {
-  border-right: solid 1px grey;
+    border-right: solid 1px grey;
 }
-
 .row:last-child .col {
-  border-bottom: solid 1px grey;
+    border-bottom: solid 1px grey;
 }
 /* General
 ==================================*/
@@ -83,70 +80,64 @@ p {
     position: fixed;
     bottom: 0;
 }
-.message_input{
-	height:55px !important;
+.message_input {
+    height: 55px !important;
 }
-
 .talk-bubble {
-	margin: 40px;
-  display: inline-block;
-  position: relative;
-	height: auto;
-	background-color: lightyellow;
+    margin: 10px 20px;
+    display: inline-block;
+    position: relative;
+    height: auto;
+    width: 90%;
+    border-radius: 10px;
 }
-.tri-right.border.left-top:before {
-	content: ' ';
-	position: absolute;
-	width: 0;
-	height: 0;
-  left: -40px;
-	right: auto;
-  top: -8px;
-	bottom: auto;
-	border: 32px solid;
-	border-color: #666 transparent transparent transparent;
+.tri-right.lefttop {
+    background-color: lightgreen;
 }
-.tri-right.left-top:after{
-	content: ' ';
-	position: absolute;
-	width: 0;
-	height: 0;
-  left: -20px;
-	right: auto;
-  top: 0px;
-	bottom: auto;
-	border: 22px solid;
-	border-color: lightyellow transparent transparent transparent;
+.tri-right.btmright {
+    background-color: lightblue;
 }
-.tri-right.btm-right:after{
-	content: ' ';
-	position: absolute;
-	width: 0;
-	height: 0;
-  left: auto;
-	right: 0px;
-	bottom: -20px;
-	border: 12px solid;
-	border-color: lightyellow lightyellow transparent transparent;
+.tri-right.lefttop:after {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 0px;
+    right: auto;
+    top: -12px;
+    bottom: auto;
+    border: 12px solid;
+    border-color: transparent transparent lightgreen lightgreen;
 }
-.tri-right.btm-right-in:after{
-	content: ' ';
-	position: absolute;
-	width: 0;
-	height: 0;
-  left: auto;
-	right: 38px;
-	bottom: -20px;
-	border: 12px solid;
-	border-color: lightyellow lightyellow transparent transparent;
+.tri-right.btmright:after {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: auto;
+    right: 0px;
+    bottom: -12px;
+    border: 12px solid;
+    border-color: lightblue lightblue transparent transparent;
 }
-.talktext{
-  padding: 1em;
-	text-align: left;
-  line-height: 1.5em;
+.talktext {
+    padding: 1em;
+    text-align: left;
+    line-height: 1.5em;
 }
-.talktext p{
-  /* remove webkit p margins */
-  -webkit-margin-before: 0em;
-  -webkit-margin-after: 0em;
+.talktext p {
+    /* remove webkit p margins */
+    
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+}
+.left {
+    float: left;
+    position: inherit;
+    margin: 5px;
+}
+.right {
+    float: right;
+    position: inherit;
+    margin: 5px;
 }
