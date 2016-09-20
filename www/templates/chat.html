@@ -16,8 +16,8 @@
          </div>
       </div>
    </ion-content>
-   <button ng-show="data.message" ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
-   <i class="icon ion-android-send"></i>
+   <button  event-focus="click" event-focus-id="message_input" ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
+   		<i class="icon ion-android-send"></i>
    </button>	
    <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
       <label class="item-input-wrapper">
