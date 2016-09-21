@@ -137,6 +137,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                     $ionicScrollDelegate.scrollBottom(true);
                 }, function(err) {
+                	$scope.typing = false;
                     var alertPopup = $ionicPopup.alert({
                         title: 'failed!',
                         template: 'There is some proble to call API!'
@@ -145,7 +146,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             } else if ($scope.data.message.toLowerCase() == 'a') {
                 $scope.typing = true;
                 BarclaysService.fetchAccountsDetails().then(function(accDetails) {
-                    $scope.typing = false;
+                    $scope.typing = true;
                     var tabelresp = "Account Details <BR> " + "<div class='row'><div class='col'>Account ID</div><div class='col'>" + accDetails.id + "</div></div>" + "<div class='row'><div class='col'>Account Type</div><div class='col'>" + accDetails.accountType + "</div></div>" + "<div class='row'><div class='col'>Account Description</div><div class='col'>" + accDetails.description + "</div></div>" + "<div class='row'><div class='col'>Account Card Number</div><div class='col'>" + accDetails.card.cardNumber + "</div></div>" + "<div class='row'><div class='col'>Account Card Current Balance</div><div class='col'>" + accDetails.card.currentBalance + "</div></div>" + "<div class='row'><div class='col'>Account Card Type<BR></div><div class='col'>" + accDetails.card.type + "</div></div>";
                     $scope.messages.push({
                         image: '../www/img/icon.png',
@@ -155,17 +156,31 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                     $ionicScrollDelegate.scrollBottom(true);
                 }, function(err) {
+                	$scope.typing = false;
                     var alertPopup = $ionicPopup.alert({
                         title: 'failed!',
                         template: 'There is some proble to call API!'
                     });
                 });
             } else {
-                $scope.messages.push({
-                    image: '../www/img/icon.png',
-                    userId: '54321',
-                    text: 'No keyword found : ' + $scope.data.message,
-                    time: d
+            	$scope.typing = true;
+                BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
+                    $scope.typing = false;
+                    $scope.messages.push({
+                        image: '../www/img/icon.png',
+                        userId: '54321',
+                        text: watsonReply.output.text,
+                        time: d
+                    });
+                    $ionicScrollDelegate.scrollBottom(true);
+                }, function(err) {
+                	$scope.typing = false;
+                	$scope.messages.push({
+                        image: '../www/img/icon.png',
+                        userId: '54321',
+                        text: 'Unfortunately there was some proble with server. Im still learning.',
+                        time: d
+                    });
                 });
             }
         }
