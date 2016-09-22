@@ -62,28 +62,8 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var callWatsonAPI = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/chatbot',
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                data:{
-            		  "input": {
-            		    "text": text
-            		  },
-            		  "context": {
-            		    "conversation_id": "ff2f0ee4-b1c9-43b0-94bf-03c91e8522ba",
-            		    "system": {
-            		      "dialog_stack": [
-            		        "root"
-            		      ],
-            		      "dialog_turn_counter": 7,
-            		      "dialog_request_counter": 7
-            		    },
-            		    "default_counter": 2,
-            		    "call_retrieve_and_rank": true
-            		  }
-            		}
+                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/mybot?query=hi',
+                method: 'GET',
             }
             $http(req).then(function(data) {
                 if (data.data !== undefined) {
