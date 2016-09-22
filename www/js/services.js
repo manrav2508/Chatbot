@@ -62,11 +62,10 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var callWatsonAPI = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'http://conversation-enhanced-mjunaidalikhan1-1958.mybluemix.net/rest/conversation/api/v1/workspaces/a40f78e7-8099-45ae-8e62-a826c7f1c374/message',
+                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/chatbot',
                 method: 'POST',
                 headers: {
-                	'Authorization': 'Basic MDMwNmM2OTgtMTY0ZS00ZTNjLWI4NzUtYzQxNzg5ZTE3YWU4OmVPWnZRUEQxYmJicw==',
-                    'content-type': 'application/json; charset=UTF-8'
+                    'Content-type': 'application/json'
                 },
                 data:{
             		  "input": {
@@ -90,7 +89,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
                 if (data.data !== undefined) {
                     resolve(data.data);
                 } else {
-                    reject('S Failed!');
+                    reject('Failed!');
                 }
             }, function(err) {
                 reject(err);
@@ -116,10 +115,6 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     return data;
 }).factory('focus', function($timeout, $window) {
     return function(id) {
-        // timeout makes sure that is invoked after any other event has been triggered.
-        // e.g. click events that need to run before the focus or
-        // inputs elements that are in a disabled state but are enabled when those events
-        // are triggered.
         $timeout(function() {
             var element = $window.document.getElementById(id);
             if (element) element.focus();

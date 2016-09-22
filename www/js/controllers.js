@@ -101,7 +101,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 text: $scope.data.message,
                 time: d
             });
-            if ($scope.data.message.toLowerCase() == 'c') {
+            if ($scope.data.message.toLowerCase().includes('cust')) {
                 $scope.typing = true;
                 BarclaysService.fetchCustDetails().then(function(custDetails) {
                     $scope.typing = false;
@@ -124,7 +124,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         template: 'There is some proble to call API!'
                     });
                 });
-            } else if ($scope.data.message.toLowerCase() == 't') {
+            } else if ($scope.data.message.toLowerCase().includes('trans')) {
                 $scope.typing = true;
                 BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
                     $scope.typing = false;
@@ -143,10 +143,10 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         template: 'There is some proble to call API!'
                     });
                 });
-            } else if ($scope.data.message.toLowerCase() == 'a') {
+            } else if ($scope.data.message.toLowerCase().includes('acc')) {
                 $scope.typing = true;
                 BarclaysService.fetchAccountsDetails().then(function(accDetails) {
-                    $scope.typing = true;
+                    $scope.typing = false;
                     var tabelresp = "Account Details <BR> " + "<div class='row'><div class='col'>Account ID</div><div class='col'>" + accDetails.id + "</div></div>" + "<div class='row'><div class='col'>Account Type</div><div class='col'>" + accDetails.accountType + "</div></div>" + "<div class='row'><div class='col'>Account Description</div><div class='col'>" + accDetails.description + "</div></div>" + "<div class='row'><div class='col'>Account Card Number</div><div class='col'>" + accDetails.card.cardNumber + "</div></div>" + "<div class='row'><div class='col'>Account Card Current Balance</div><div class='col'>" + accDetails.card.currentBalance + "</div></div>" + "<div class='row'><div class='col'>Account Card Type<BR></div><div class='col'>" + accDetails.card.type + "</div></div>";
                     $scope.messages.push({
                         image: '../www/img/icon.png',
