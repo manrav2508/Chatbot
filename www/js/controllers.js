@@ -124,7 +124,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         template: 'There is some proble to call API!'
                     });
                 });
-            } else if ($scope.data.message.toLowerCase().includes('trans')) {
+            } else if ($scope.data.message.toLowerCase().includes('transaction')) {
                 $scope.typing = true;
                 BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
                     $scope.typing = false;

@@ -59,10 +59,27 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
+    var callFacebook = function(text){
+    	return $q(function(resolve, reject) {
+            var req = {
+                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/mybot?from=&query=' +text,
+                method: 'GET',
+            }
+            $http(req).then(function(data) {
+                if (data.data !== undefined) {
+                    resolve(data.data);
+                } else {
+                    reject('Failed!');
+                }
+            }, function(err) {
+                reject(err);
+            });
+        });
+    };
     var callWatsonAPI = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/mybot?query=hi',
+                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/mybot?from=&query=' +text,
                 method: 'GET',
             }
             $http(req).then(function(data) {
