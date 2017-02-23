@@ -76,7 +76,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.$parent.setHeaderFab('left');
-    $scope.text=  ":smile: :angry: :rage: :disappointed: :fearful:"
+    $scope.text=  " :smile: :smiley: :disappointed: :worried: :fearful: :rage:"
     // Delay expansion
     $timeout(function() {
         $scope.isExpanded = true;
