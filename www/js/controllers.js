@@ -71,7 +71,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
-}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService) {
+}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService, $anchorScroll, $location) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -90,13 +90,14 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.typing = false;
     $scope.sendMessage = function() {
+    	//BarclaysService.scrollTo('bottom');
         $ionicScrollDelegate.scrollBottom(true);
         alternate = !alternate;
         var d = new Date();
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
         if ($scope.data.message !== undefined) {
             $scope.messages.push({
-                image: '../www/img/arya.jpg',
+                image: 'img/arya.jpg',
                 userId: '12345',
                 text: $scope.data.message,
                 time: d
@@ -111,7 +112,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     }
                     var tabelresp = "Customer Details <BR> " + "<div class='row'><div class='col header'>Customer Name</div><div class='col'>" + custDetails.title + " " + custDetails.firstName + " " + custDetails.lastName + "</div></div>" + "<div class='row'><div class='col'>Contact Details</div><div class='col'>" + custDetails.mobileNo + "</div></div>" + "<div class='row'><div class='col'>DOB</div><div class='col'>" + new Date(custDetails.dateOfBirth) + "</div></div>" + "<div class='row'><div class='col'>Customer Address</div><div class='col'>" + custDetails.address.street + ", " + custDetails.address.town + "<br> " + custDetails.address.postalCode + ", " + custDetails.address.country + "</div></div>" + "<div class='row'><div class='col'>Customer Accounts</div><div class='col'>" + accountDetails + "</div>";
                     $scope.messages.push({
-                        image: '../www/img/icon.png',
+                        image: 'img/icon.png',
                         userId: '54321',
                         text: tabelresp,
                         time: d
@@ -124,13 +125,13 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         template: 'There is some proble to call API!'
                     });
                 });
-            } else if ($scope.data.message.toLowerCase().includes('transaction')) {
+            } else if ($scope.data.message.toLowerCase().includes('trans')) {
                 $scope.typing = true;
                 BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
                     $scope.typing = false;
                     var tabelresp = "Transuction Details <BR> " + "<div class='row'><div class='col'>Transuction ID</div><div class='col'>" + transDetails.id + "</div></div>" + "<div class='row'><div class='col'>Money In</div><div class='col'>" + transDetails.amount.moneyIn + "</div></div>" + "<div class='row'><div class='col'>Money Out</div><div class='col'>" + transDetails.amount.moneyOut + "</div></div>" + "<div class='row'><div class='col'>Payment Method</div><div class='col'>" + transDetails.paymentMethod + "</div></div>" + "<div class='row'><div class='col'>Balance After Transaction <BR></div><div class='col'>" + transDetails.accountBalanceAfterTransaction.amount + "</div></div>";
                     $scope.messages.push({
-                        image: '../www/img/icon.png',
+                        image: 'img/icon.png',
                         userId: '54321',
                         text: tabelresp,
                         time: d
@@ -149,7 +150,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     $scope.typing = false;
                     var tabelresp = "Account Details <BR> " + "<div class='row'><div class='col'>Account ID</div><div class='col'>" + accDetails.id + "</div></div>" + "<div class='row'><div class='col'>Account Type</div><div class='col'>" + accDetails.accountType + "</div></div>" + "<div class='row'><div class='col'>Account Description</div><div class='col'>" + accDetails.description + "</div></div>" + "<div class='row'><div class='col'>Account Card Number</div><div class='col'>" + accDetails.card.cardNumber + "</div></div>" + "<div class='row'><div class='col'>Account Card Current Balance</div><div class='col'>" + accDetails.card.currentBalance + "</div></div>" + "<div class='row'><div class='col'>Account Card Type<BR></div><div class='col'>" + accDetails.card.type + "</div></div>";
                     $scope.messages.push({
-                        image: '../www/img/icon.png',
+                        image: 'img/icon.png',
                         userId: '54321',
                         text: tabelresp,
                         time: d
@@ -167,7 +168,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
                     $scope.typing = false;
                     $scope.messages.push({
-                        image: '../www/img/icon.png',
+                        image: 'img/icon.png',
                         userId: '54321',
                         text: watsonReply.output.text,
                         time: d
@@ -176,7 +177,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 }, function(err) {
                 	$scope.typing = false;
                 	$scope.messages.push({
-                        image: '../www/img/icon.png',
+                        image: 'img/icon.png',
                         userId: '54321',
                         text: 'Unfortunately there was some proble with server. Im still learning.',
                         time: d

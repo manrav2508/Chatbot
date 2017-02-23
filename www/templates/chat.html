@@ -1,21 +1,38 @@
 <ion-view view-title="Chat">
    <ion-content ng-class="{expanded:isExpanded}" >
-      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
-         <div class="talktext">
-            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
-            <p ng-bind-html="message.text"></p>
-            <div class="pull-left ">
-               <i class="icon balanced ion-clock"></i> {{message.time}}
-            </div>
-         </div>
+      <div class="list half" style="max-height:600px;height:auto !important;height:500px;overflow:auto;overflow-x:hidden;" id="scroll"> 
+	      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
+	         <div class="talktext">
+	            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
+	            <p ng-bind-html="message.text"></p>
+	            <div class="pull-left ">
+	               <i class="icon balanced ion-clock"></i> {{message.time}}
+	            </div>
+	         </div>
+	      </div>
+	      <div ng-show="typing" class="talk-bubble tri-right lefttop">
+	         <div class="talktext">
+	            <img class="avatar left" src="img/icon.png"></img>
+	            <div> Typing..... </div>
+	         </div>
+	      </div>
       </div>
-      <div ng-show="typing" class="talk-bubble tri-right lefttop">
-         <div class="talktext">
-            <img class="avatar left" src="../www/img/icon.png"></img>
-            <div> Typing..... </div>
-         </div>
-      </div>
+      <div class="list half">
+           <div ui-sref="app.profile" class="card card-gallery item item-text-wrap">
+               <div class="ink dark-bg">
+                   <h2>Where's Elsa?</h2>
+                   <p><h>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</h></p>
+               </div>
+           </div>
+           <div ui-sref="app.profile" class="card card-gallery item item-text-wrap">
+               <div class="ink dark-bg">
+                   <h2>Hmm. Hope nobody destroys this!</h2>
+                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+               </div>
+           </div>
+       </div>
    </ion-content>
+    <a id="bottom"></a>
    <button  event-focus="click" event-focus-id="message_input" ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
    		<i class="icon ion-android-send"></i>
    </button>	
