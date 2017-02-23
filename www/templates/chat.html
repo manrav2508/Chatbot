@@ -1,4 +1,5 @@
 <ion-view view-title="Chat">
+ 
    <ion-content ng-class="{expanded:isExpanded}" >
       <div class="list half" style="max-height:600px;height:auto !important;height:500px;overflow:auto;overflow-x:hidden;" id="scroll"> 
 	      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
@@ -20,9 +21,11 @@
       <div class="list half">
            <div ui-sref="app.profile" class="card card-gallery item item-text-wrap">
                <div class="ink dark-bg">
-                   <h2>Where's Elsa?</h2>
-                   <p><h2>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</h2></p>
+                   <h2>Emoticons</h2>
+                   <p><h2><div ng-bind-html="text | emoticons:{linkTarget:'_blank'}"></div></h2></p>
+                   
                </div>
+              
            </div>
            <div ui-sref="app.profile" class="card card-gallery item item-text-wrap">
                <div class="ink dark-bg">
@@ -37,7 +40,7 @@
    </button>	
    <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
       <label class="item-input-wrapper">
-      <input id="message_input" class="message_input" type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
+      <input id="message_input" focus-on-change="message"  class="message_input" type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
       </label>
    </ion-footer-bar>
 </ion-view>
