@@ -2,46 +2,48 @@
  
    <ion-content ng-class="{expanded:isExpanded}" >
       <div class="list half" style="max-height:600px;height:auto !important;height:500px;overflow:auto;overflow-x:hidden;" id="scroll"> 
-	      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
-	         <div class="talktext">
-	            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
-	            <p ng-bind-html="message.text"></p>
-	            <div class="pull-left ">
-	               <i class="icon balanced ion-clock"></i> {{message.time}}
-	            </div>
-	         </div>
-	      </div>
-	      <div ng-show="typing" class="talk-bubble tri-right lefttop">
-	         <div class="talktext">
-	            <img class="avatar left" src="img/icon.png"></img>
-	            <div> Typing..... </div>
-	         </div>
-	      </div>
+	      <div  class="card card-gallery item item-text-wrap">
+		      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
+		         <div class="talktext">
+		            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
+		            <p ng-bind-html="message.text"></p>
+		            <div class="pull-left ">
+		               <i class="icon balanced ion-clock"></i> {{message.time}}
+		            </div>
+		         </div>
+		      </div>
+		      <div ng-show="typing" class="talk-bubble tri-right lefttop">
+		         <div class="talktext">
+		            <img class="avatar left" src="img/icon.png"></img>
+		            <div> Typing..... </div>
+		         </div>
+		      </div>
+		  </div>
       </div>
       <div class="list half">
-           <div ui-sref="app.profile" class="card card-gallery item item-text-wrap">
+           <div  class="card card-gallery item item-text-wrap">
                <div class="ink dark-bg">
-                   <h2>Emoticons</h2>
+                   <h2>Emoticons</h2><img class="avatar left" src="img/sansa.jpg"></img><br>
                    <p><h2><div ng-bind-html="text | emoticons:{linkTarget:'_blank'}"></div></h2></p>
                    <h2>
                    		<progress id="progressbar" max="100" value="{{ progValHappy }}"> </progress>
-    			   		<div id="progressbarlabel">{{ progValHappy }} %</div>
+    			   		<div id="progressbarlabel" ng-bind-html="':smile:'+' '+progValHappy+' %' | emoticons:{linkTarget:'_blank'}"> </div>
     			   </h2>
     			    <h2>
 	    			   <progress id="progressbar" max="100" value="{{ progValSad }}"> </progress>
-	    			   <div id="progressbarlabel">{{ progValSad }} %</div>
+	    			   <div id="progressbarlabel" ng-bind-html="':disappointed:'+' '+progValSad+' %' | emoticons:{linkTarget:'_blank'}"> </div>
     			   </h2>
     			   <h2>
                    		<progress id="progressbar" max="100" value="{{ progValAngry }}"> </progress>
-    			   		<div id="progressbarlabel">{{ progValAngry }} %</div>
+                   		<div id="progressbarlabel" ng-bind-html="':rage:'+' '+progValAngry+' %' | emoticons:{linkTarget:'_blank'}"> </div>
     			   </h2>
                </div>
               
            </div>
            <div ui-sref="app.profile" class="card card-gallery item item-text-wrap">
                <div class="ink dark-bg">
-                   <h2>Hmm. Hope nobody destroys this!</h2>
-                   <p><h2>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum></h2></p>
+                   <p><h2>Cognitive Agent</h2></p>
+                   <img class="avatar left" src="img/icon.png"></img>
                </div>
            </div>
        </div>

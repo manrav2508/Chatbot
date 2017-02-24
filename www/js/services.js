@@ -62,11 +62,8 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var calltoneAnalyzer = function(text){
     	return $q(function(resolve, reject) {
             var req = {
-                url: "https://rtoneanalyzer.mybluemix.net/v0.1/toneAnalyzer/tone?text=HiJundai",
-                method: 'GET',
-                data:{
-                	"text" : "Hi Jundai"
-                }
+                url: "https://rtoneanalyzer.mybluemix.net/v0.1/toneAnalyzer/tone?text="+text,
+                method: 'GET'                
             }
             $http(req).then(function(data) {
                 if (data.data !== undefined) {
@@ -116,13 +113,34 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
+    var blockCustomerCard = function() {
+        return $q(function(resolve, reject) {
+            var req = {
+                url: 'https://anshuspringmvc.mybluemix.net/blockCards/3445366001',
+                method: 'GET',
+                headers: {
+                    "content-type": "application/json",
+                  }
+            }
+            $http(req).then(function(data) {
+                if (data.data !== undefined) {
+                    resolve(data.data);
+                } else {
+                    reject('Failed!');
+                }
+            }, function(err) {
+                reject(err);
+            });
+        });
+    };
     return {
         fetchCustDetails: fetchCustDetails,
         fetchTansuctionsDetails: fetchTansuctionsDetails,
         fetchAccountsDetails: fetchAccountsDetails,
         callWatsonAPI: callWatsonAPI,
         calltoneAnalyzer: calltoneAnalyzer,
-        callCustomerDetails:callCustomerDetails
+        callCustomerDetails:callCustomerDetails,
+        blockCustomerCard:blockCustomerCard
     };
 }).factory('focus', function($timeout, $window) {
     return function(id) {

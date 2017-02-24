@@ -76,7 +76,6 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.$parent.setHeaderFab('left');
-    $scope.text = " :smile: :smiley: :disappointed: :fearful: :rage:"
     // Delay expansion
     $timeout(function() {
         $scope.isExpanded = true;
@@ -90,39 +89,6 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     var alternate,
         isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.typing = false;
-    var progValHappy = 80;
-    var progValSad = 20;
-    var progValAngry = 50;
-    starthappyProgress(progValHappy);
-    startSadProgress(progValSad);
-    startAngryProgress(progValAngry);
-    function starthappyProgress(maxVal) {
-        $scope.progValHappy = 0;
-        $scope.happyInterval = $interval(function() {
-            $scope.progValHappy = $scope.progValHappy + 1;
-            if ($scope.progValHappy >= maxVal) {
-                $interval.cancel($scope.happyInterval);
-            }
-        }, 100);
-    }
-    function startSadProgress(maxVal) {
-        $scope.progValSad = 0;
-        $scope.sadInterval = $interval(function() {
-            $scope.progValSad = $scope.progValSad + 1;
-            if ($scope.progValSad >= maxVal) {
-                $interval.cancel($scope.sadInterval);
-            }
-        }, 100);
-    }
-    function startAngryProgress(maxVal) {
-        $scope.progValAngry = 0;
-        $scope.angryInterval = $interval(function() {
-            $scope.progValAngry = $scope.progValAngry + 1;
-            if ($scope.progValAngry >= maxVal) {
-                $interval.cancel($scope.angryInterval);
-            }
-        }, 100);
-    }
     $scope.sendMessage = function() {
         //BarclaysService.scrollTo('bottom');
         $ionicScrollDelegate.scrollBottom(true);
@@ -136,8 +102,69 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 text: $scope.data.message,
                 time: d
             });
-            BarclaysService.calltoneAnalyzer().then(function(toneAnalyzerResp) {
-                var tabelresp = "";
+            $scope.custMessage = "";
+            for (var i = 0; i < $scope.messages.length; i++) {
+                if ($scope.messages[i].userId === "12345") {
+                    $scope.custMessage += $scope.messages[i].text + "+ "
+                }
+            }
+            var progValHappy = 0;
+            var progValAngry = 0;
+            var progValSad = 0;
+            BarclaysService.calltoneAnalyzer($scope.custMessage).then(function(toneAnalyzerResp) {
+                for (var i = 0; i < toneAnalyzerResp.emotionTone.length; i++) {
+                    if (toneAnalyzerResp.emotionTone[i].name === 'Joy') {
+                        progValHappy = toneAnalyzerResp.emotionTone[i].score;
+                        starthappyProgress(progValHappy * 100);
+                    }
+                    if (toneAnalyzerResp.emotionTone[i].name === 'Anger') {
+                        progValAngry = toneAnalyzerResp.emotionTone[i].score;
+                        startAngryProgress(progValAngry * 100);
+                    }
+                    if (toneAnalyzerResp.emotionTone[i].name === 'Sadness') {
+                        progValSad = toneAnalyzerResp.emotionTone[i].score;
+                        startSadProgress(progValSad * 100);
+                    }
+                    if (toneAnalyzerResp.emotionTone[i].highScore) {
+                        $scope.text = getEmotion(toneAnalyzerResp.emotionTone[i].name);
+                    }
+                }
+                function getEmotion(emtVal) {
+                    var emj = "";
+                    emj += (emtVal === 'Sadness') ? ":disappointed:" : '';
+                    emj += (emtVal === 'Anger') ? ":rage:" : '';
+                    emj += (emtVal === 'Disgust') ? ":unamused:" : '';
+                    emj += (emtVal === 'Fear') ? ":fearful:" : '';
+                    emj += (emtVal === 'Joy') ? ":smile:" : '';
+                    return emj;
+                }
+                function starthappyProgress(maxVal) {
+                    $scope.progValHappy = 0;
+                    $scope.happyInterval = $interval(function() {
+                        $scope.progValHappy = $scope.progValHappy + 1;
+                        if ($scope.progValHappy >= maxVal) {
+                            $interval.cancel($scope.happyInterval);
+                        }
+                    }, 50);
+                }
+                function startSadProgress(maxVal) {
+                    $scope.progValSad = 0;
+                    $scope.sadInterval = $interval(function() {
+                        $scope.progValSad = $scope.progValSad + 1;
+                        if ($scope.progValSad >= maxVal) {
+                            $interval.cancel($scope.sadInterval);
+                        }
+                    }, 50);
+                }
+                function startAngryProgress(maxVal) {
+                    $scope.progValAngry = 0;
+                    $scope.angryInterval = $interval(function() {
+                        $scope.progValAngry = $scope.progValAngry + 1;
+                        if ($scope.progValAngry >= maxVal) {
+                            $interval.cancel($scope.angryInterval);
+                        }
+                    }, 50);
+                }
             }, function(err) {
                 $scope.typing = false;
                 var alertPopup = $ionicPopup.alert({
@@ -206,8 +233,8 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         template: 'There is some proble to call API!'
                     });
                 });
-            }  else if ($scope.data.message.toLowerCase().includes('loss') || $scope.data.message.toLowerCase().includes('lost') || $scope.data.message.toLowerCase().includes('wallet')) {
-            	$scope.typing = false;
+            } else if ($scope.data.message.toLowerCase().includes('loss') || $scope.data.message.toLowerCase().includes('lost') || $scope.data.message.toLowerCase().includes('wallet')) {
+                $scope.typing = false;
                 var tabelresp = "I see that your complaint is related to Cards <BR> <BR> Can I get your customer ID? (Prefix @ before customer ID)";
                 $scope.messages.push({
                     image: 'img/icon.png',
@@ -215,20 +242,20 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     text: tabelresp,
                     time: d
                 });
-            } else if($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11) {
+            } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11) {
                 $scope.typing = true;
-                var indexOfTo= $scope.data.message.indexOf("@");
+                var indexOfTo = $scope.data.message.indexOf("@");
                 var custId = $scope.data.message.substring(indexOfTo + 1);
                 BarclaysService.callCustomerDetails(custId).then(function(customerService) {
                     $scope.typing = false;
                     var cardText = '';
-                    for(var i=0; i< customerService.length; i++){
-                    	cardText += customerService[i].cardNumber + ' / ';
+                    for (var i = 0; i < customerService.length; i++) {
+                        cardText += customerService[i].cardNumber + ' / ';
                     }
                     $scope.messages.push({
                         image: 'img/icon.png',
                         userId: '54321',
-                        text: 'Can you confim which of the 2 cards, '+ cardText + 'to block? ((Prefix @ before Card Number))',
+                        text: 'Can you confim which of the 2 cards, ' + cardText + 'to block? ((Prefix @ before Card Number))',
                         time: d
                     });
                     $ionicScrollDelegate.scrollBottom(true);
@@ -242,13 +269,46 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                 });
             } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11) {
-            	$scope.typing = false;
-                var tabelresp = "OK. We have taken a request for block card immediately. Your replacement card should reach you within 3 days. Your Ticket reference number is 38f05b4220aca1d5b68cd874b5d8f4131234567890";
-                $scope.messages.push({
-                    image: 'img/icon.png',
-                    userId: '54321',
-                    text: tabelresp,
-                    time: d
+                $scope.typing = false;
+                BarclaysService.blockCustomerCard().then(function(customerService) {
+                    $scope.typing = false;
+                    var cardText = '';
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: customerService.message,
+                        time: d
+                    });
+                    $ionicScrollDelegate.scrollBottom(true);
+                }, function(err) {
+                    $scope.typing = false;
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: 'Unfortunately there was some problem with server. Im still learning.',
+                        time: d
+                    });
+                });
+            } else if ($scope.data.message.toLowerCase().includes('all')) {
+                $scope.typing = false;
+                BarclaysService.blockCustomerCard().then(function(customerService) {
+                    $scope.typing = false;
+                    var cardText = '';
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: customerService.message,
+                        time: d
+                    });
+                    $ionicScrollDelegate.scrollBottom(true);
+                }, function(err) {
+                    $scope.typing = false;
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: 'Unfortunately there was some problem with server. Im still learning.',
+                        time: d
+                    });
                 });
             } else {
                 $scope.typing = true;
