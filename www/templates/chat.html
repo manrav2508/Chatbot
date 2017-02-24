@@ -23,7 +23,18 @@
                <div class="ink dark-bg">
                    <h2>Emoticons</h2>
                    <p><h2><div ng-bind-html="text | emoticons:{linkTarget:'_blank'}"></div></h2></p>
-                   
+                   <h2>
+                   		<progress id="progressbar" max="100" value="{{ progValHappy }}"> </progress>
+    			   		<div id="progressbarlabel">{{ progValHappy }} %</div>
+    			   </h2>
+    			    <h2>
+	    			   <progress id="progressbar" max="100" value="{{ progValSad }}"> </progress>
+	    			   <div id="progressbarlabel">{{ progValSad }} %</div>
+    			   </h2>
+    			   <h2>
+                   		<progress id="progressbar" max="100" value="{{ progValAngry }}"> </progress>
+    			   		<div id="progressbarlabel">{{ progValAngry }} %</div>
+    			   </h2>
                </div>
               
            </div>

@@ -71,12 +71,12 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
-}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService, $anchorScroll, $location) {
+}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService, $interval) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.$parent.setHeaderFab('left');
-    $scope.text=  " :smile: :smiley: :disappointed: :worried: :fearful: :rage:"
+    $scope.text = " :smile: :smiley: :disappointed: :fearful: :rage:"
     // Delay expansion
     $timeout(function() {
         $scope.isExpanded = true;
@@ -90,8 +90,41 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
     var alternate,
         isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.typing = false;
+    var progValHappy = 80;
+    var progValSad = 20;
+    var progValAngry = 50;
+    starthappyProgress(progValHappy);
+    startSadProgress(progValSad);
+    startAngryProgress(progValAngry);
+    function starthappyProgress(maxVal) {
+        $scope.progValHappy = 0;
+        $scope.happyInterval = $interval(function() {
+            $scope.progValHappy = $scope.progValHappy + 1;
+            if ($scope.progValHappy >= maxVal) {
+                $interval.cancel($scope.happyInterval);
+            }
+        }, 100);
+    }
+    function startSadProgress(maxVal) {
+        $scope.progValSad = 0;
+        $scope.sadInterval = $interval(function() {
+            $scope.progValSad = $scope.progValSad + 1;
+            if ($scope.progValSad >= maxVal) {
+                $interval.cancel($scope.sadInterval);
+            }
+        }, 100);
+    }
+    function startAngryProgress(maxVal) {
+        $scope.progValAngry = 0;
+        $scope.angryInterval = $interval(function() {
+            $scope.progValAngry = $scope.progValAngry + 1;
+            if ($scope.progValAngry >= maxVal) {
+                $interval.cancel($scope.angryInterval);
+            }
+        }, 100);
+    }
     $scope.sendMessage = function() {
-    	//BarclaysService.scrollTo('bottom');
+        //BarclaysService.scrollTo('bottom');
         $ionicScrollDelegate.scrollBottom(true);
         alternate = !alternate;
         var d = new Date();
@@ -103,7 +136,16 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 text: $scope.data.message,
                 time: d
             });
-            if ($scope.data.message.toLowerCase().includes('cust')) {
+            BarclaysService.calltoneAnalyzer().then(function(toneAnalyzerResp) {
+                var tabelresp = "";
+            }, function(err) {
+                $scope.typing = false;
+                var alertPopup = $ionicPopup.alert({
+                    title: 'failed!',
+                    template: 'There is some proble to call API!'
+                });
+            });
+            if ($scope.data.message.toLowerCase().includes('details')) {
                 $scope.typing = true;
                 BarclaysService.fetchCustDetails().then(function(custDetails) {
                     $scope.typing = false;
@@ -139,7 +181,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                     $ionicScrollDelegate.scrollBottom(true);
                 }, function(err) {
-                	$scope.typing = false;
+                    $scope.typing = false;
                     var alertPopup = $ionicPopup.alert({
                         title: 'failed!',
                         template: 'There is some proble to call API!'
@@ -158,14 +200,58 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                     $ionicScrollDelegate.scrollBottom(true);
                 }, function(err) {
-                	$scope.typing = false;
+                    $scope.typing = false;
                     var alertPopup = $ionicPopup.alert({
                         title: 'failed!',
                         template: 'There is some proble to call API!'
                     });
                 });
+            }  else if ($scope.data.message.toLowerCase().includes('loss') || $scope.data.message.toLowerCase().includes('lost') || $scope.data.message.toLowerCase().includes('wallet')) {
+            	$scope.typing = false;
+                var tabelresp = "I see that your complaint is related to Cards <BR> <BR> Can I get your customer ID? (Prefix @ before customer ID)";
+                $scope.messages.push({
+                    image: 'img/icon.png',
+                    userId: '54321',
+                    text: tabelresp,
+                    time: d
+                });
+            } else if($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11) {
+                $scope.typing = true;
+                var indexOfTo= $scope.data.message.indexOf("@");
+                var custId = $scope.data.message.substring(indexOfTo + 1);
+                BarclaysService.callCustomerDetails(custId).then(function(customerService) {
+                    $scope.typing = false;
+                    var cardText = '';
+                    for(var i=0; i< customerService.length; i++){
+                    	cardText += customerService[i].cardNumber + ' / ';
+                    }
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: 'Can you confim which of the 2 cards, '+ cardText + 'to block? ((Prefix @ before Card Number))',
+                        time: d
+                    });
+                    $ionicScrollDelegate.scrollBottom(true);
+                }, function(err) {
+                    $scope.typing = false;
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: 'Unfortunately there was some problem with server. Im still learning.',
+                        time: d
+                    });
+                });
+            } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11) {
+            	$scope.typing = false;
+                var tabelresp = "OK. We have taken a request for block card immediately. Your replacement card should reach you within 3 days. Your Ticket reference number is 38f05b4220aca1d5b68cd874b5d8f4131234567890";
+                $scope.messages.push({
+                    image: 'img/icon.png',
+                    userId: '54321',
+                    text: tabelresp,
+                    time: d
+                });
             } else {
-            	$scope.typing = true;
+                $scope.typing = true;
                 BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
                     $scope.typing = false;
                     $scope.messages.push({
@@ -176,8 +262,8 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                     $ionicScrollDelegate.scrollBottom(true);
                 }, function(err) {
-                	$scope.typing = false;
-                	$scope.messages.push({
+                    $scope.typing = false;
+                    $scope.messages.push({
                         image: 'img/icon.png',
                         userId: '54321',
                         text: 'Unfortunately there was some proble with server. Im still learning.',

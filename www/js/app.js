@@ -15,6 +15,8 @@ angular.module('rbbr', ['ionic', 'ionic-material', 'ionMdInput', 'ngSanitize', '
             StatusBar.styleDefault();
         }
     });
-}).config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+}).config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
     // Turn off caching for demo simplicity's sake
+	$httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });
