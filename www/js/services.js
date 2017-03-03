@@ -39,6 +39,24 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
+    var rnrDetails = function(text) {
+        return $q(function(resolve, reject) {
+            var req = {
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec7cx29-rank-1081?queryString='+text,
+                method: 'GET',
+            }
+            $http(req).then(function(data) {
+                if (data.data !== undefined) {
+                    resolve(data.data);
+                } else {
+                    reject('Failed!');
+                }
+            }, function(err) {
+                reject(err);
+            });
+        });
+    };
+    
     var fetchAccountsDetails = function() {
         return $q(function(resolve, reject) {
             var req = {
@@ -113,10 +131,30 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
-    var blockCustomerCard = function() {
+    var nlcOutput = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://anshuspringmvc.mybluemix.net/blockCards/3445366001',
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/nlc/4d5c10x177-nlc-1789/classify?text='+text,
+                method: 'GET',
+                headers: {
+                    "content-type": "application/json",
+                  }
+            }
+            $http(req).then(function(data) {
+                if (data.data !== undefined) {
+                    resolve(data.data);
+                } else {
+                    reject('Failed!');
+                }
+            }, function(err) {
+                reject(err);
+            });
+        });
+    };
+    var blockCustomerCard = function(text) {
+        return $q(function(resolve, reject) {
+            var req = {
+                url: 'https://anshuspringmvc.mybluemix.net/blockCards/'+text,
                 method: 'GET',
                 headers: {
                     "content-type": "application/json",
@@ -140,7 +178,9 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
         callWatsonAPI: callWatsonAPI,
         calltoneAnalyzer: calltoneAnalyzer,
         callCustomerDetails:callCustomerDetails,
-        blockCustomerCard:blockCustomerCard
+        blockCustomerCard:blockCustomerCard,
+        rnrDetails:rnrDetails,
+        nlcOutput:nlcOutput
     };
 }).factory('focus', function($timeout, $window) {
     return function(id) {

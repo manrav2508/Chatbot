@@ -111,6 +111,24 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             var progValHappy = 0;
             var progValAngry = 0;
             var progValSad = 0;
+            var nlcOutput = "";
+            
+                BarclaysService.nlcOutput($scope.data.message).then(function(customerService){
+                    $scope.typing = false;
+                    var cardText = '';
+                    nlcOutput = customerService.topClass;
+                   
+                    
+                }, function(err) {
+                    $scope.typing = false;
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: 'Unfortunately there was some problem with server. I m still learning.',
+                        time: d
+                    });
+                });
+            
             BarclaysService.calltoneAnalyzer($scope.custMessage).then(function(toneAnalyzerResp) {
                 for (var i = 0; i < toneAnalyzerResp.emotionTone.length; i++) {
                     if (toneAnalyzerResp.emotionTone[i].name === 'Joy') {
@@ -233,7 +251,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         template: 'There is some proble to call API!'
                     });
                 });
-            } else if ($scope.data.message.toLowerCase().includes('loss') || $scope.data.message.toLowerCase().includes('lost') || $scope.data.message.toLowerCase().includes('wallet')) {
+            } /*else if ($scope.data.message.toLowerCase().includes('loss') || $scope.data.message.toLowerCase().includes('lost') || $scope.data.message.toLowerCase().includes('wallet')) {
                 $scope.typing = false;
                 var tabelresp = "I see that your complaint is related to Cards <BR> <BR> Can I get your customer ID? (Prefix @ before customer ID)";
                 $scope.messages.push({
@@ -242,7 +260,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     text: tabelresp,
                     time: d
                 });
-            } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11) {
+            } */else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11 && nlcOutput === "CARDS") {
                 $scope.typing = true;
                 var indexOfTo = $scope.data.message.indexOf("@");
                 var custId = $scope.data.message.substring(indexOfTo + 1);
@@ -255,7 +273,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     $scope.messages.push({
                         image: 'img/icon.png',
                         userId: '54321',
-                        text: 'Can you confim which of the 2 cards, ' + cardText + 'to block? ((Prefix @ before Card Number))',
+                        text: 'Can you confim which of the '+ customerService.length  +' cards, ' + cardText + 'to block? ((Prefix @ before Card Number))',
                         time: d
                     });
                     $ionicScrollDelegate.scrollBottom(true);
@@ -269,8 +287,10 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                 });
             } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11) {
+            	var indexOfTo = $scope.data.message.indexOf("@");
+                var cardNum = $scope.data.message.substring(indexOfTo + 1);
                 $scope.typing = false;
-                BarclaysService.blockCustomerCard().then(function(customerService) {
+                BarclaysService.blockCustomerCard(cardNum).then(function(customerService) {
                     $scope.typing = false;
                     var cardText = '';
                     $scope.messages.push({
@@ -313,13 +333,41 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             } else {
                 $scope.typing = true;
                 BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
-                    $scope.typing = false;
-                    $scope.messages.push({
+                    if (watsonReply.output.text[0].includes('?')) {
+                        $scope.typing = true;
+                        BarclaysService.rnrDetails(watsonReply.output.text[0]).then(function(customerService) {
+                            $scope.typing = false;
+                            var cardText = '';
+                            var cardTitle = customerService.title;
+                            var nextStep = customerService.nextStep;
+                            var htmlContent =  '<B>' + customerService.title + '</B>' + customerService.contentHtml + '<BR>' + customerService.nextStep;
+                            $scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: htmlContent,
+                                time: d
+                            });
+                            $ionicScrollDelegate.scrollBottom(true);
+                        }, function(err) {
+                            $scope.typing = false;
+                            $scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'Unfortunately there was some problem with server. Im still learning.',
+                                time: d
+                            });
+                        });
+                    } 
+                    else{
+                    	
+                    	$scope.messages.push({
                         image: 'img/icon.png',
                         userId: '54321',
                         text: watsonReply.output.text,
                         time: d
                     });
+                    	
+                    }
                     $ionicScrollDelegate.scrollBottom(true);
                 }, function(err) {
                     $scope.typing = false;
