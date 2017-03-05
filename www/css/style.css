@@ -138,3 +138,12 @@ p {
     position: inherit;
     margin: 5px;
 }
+
+@media all and (max-width: 800px) {
+	.list.half {
+		width: 100%;
+		display:inline-block;
+	}
+	
+
+}

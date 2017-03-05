@@ -42,7 +42,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var rnrDetails = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec7cx29-rank-1081?queryString='+text,
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec7cx29-rank-1081?queryString=' + text,
                 method: 'GET',
             }
             $http(req).then(function(data) {
@@ -56,7 +56,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
-    
+
     var fetchAccountsDetails = function() {
         return $q(function(resolve, reject) {
             var req = {
@@ -77,11 +77,11 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
-    var calltoneAnalyzer = function(text){
-    	return $q(function(resolve, reject) {
+    var calltoneAnalyzer = function(text) {
+        return $q(function(resolve, reject) {
             var req = {
-                url: "https://rtoneanalyzer.mybluemix.net/v0.1/toneAnalyzer/tone?text="+text,
-                method: 'GET'                
+                url: "https://rtoneanalyzer.mybluemix.net/v0.1/toneAnalyzer/tone?text=" + text,
+                method: 'GET'
             }
             $http(req).then(function(data) {
                 if (data.data !== undefined) {
@@ -97,7 +97,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var callWatsonAPI = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/mybot?channel=facebook&to=abhinav&from=abhi&query='+text,
+                url: 'http://watsonbot.au-syd.mybluemix.net/watsonbot/api/mybot?channel=facebook&to=abhinav&from=abhi&query=' + text,
                 method: 'GET',
             }
             $http(req).then(function(data) {
@@ -114,11 +114,11 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var callCustomerDetails = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://anshuspringmvc.mybluemix.net/getCards/'+text,
+                url: 'https://anshuspringmvc.mybluemix.net/getCards/' + text,
                 method: 'GET',
                 headers: {
                     "content-type": "application/json",
-                  }
+                }
             }
             $http(req).then(function(data) {
                 if (data.data !== undefined) {
@@ -134,11 +134,11 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var nlcOutput = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/nlc/4d5c10x177-nlc-1789/classify?text='+text,
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/nlc/4d5c10x177-nlc-1789/classify?text=' + text,
                 method: 'GET',
                 headers: {
                     "content-type": "application/json",
-                  }
+                }
             }
             $http(req).then(function(data) {
                 if (data.data !== undefined) {
@@ -154,11 +154,11 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var blockCustomerCard = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://anshuspringmvc.mybluemix.net/blockCards/'+text,
+                url: 'https://anshuspringmvc.mybluemix.net/blockCards/' + text,
                 method: 'GET',
                 headers: {
                     "content-type": "application/json",
-                  }
+                }
             }
             $http(req).then(function(data) {
                 if (data.data !== undefined) {
@@ -177,10 +177,10 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
         fetchAccountsDetails: fetchAccountsDetails,
         callWatsonAPI: callWatsonAPI,
         calltoneAnalyzer: calltoneAnalyzer,
-        callCustomerDetails:callCustomerDetails,
-        blockCustomerCard:blockCustomerCard,
-        rnrDetails:rnrDetails,
-        nlcOutput:nlcOutput
+        callCustomerDetails: callCustomerDetails,
+        blockCustomerCard: blockCustomerCard,
+        rnrDetails: rnrDetails,
+        nlcOutput: nlcOutput
     };
 }).factory('focus', function($timeout, $window) {
     return function(id) {

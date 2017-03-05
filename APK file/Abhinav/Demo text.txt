@@ -1,0 +1,38 @@
+Hi, This is Barclays cognitive agent demo. This cognitive agent utilizes machine learning to resolve customer issues. It can make various system calls with the help of robotic SMEs.
+
+
+
+
+Customer Calls Cognitive agent. It says Hello to the agent.
+
+Cognitive agent process the message with the help of natural language processing abilities and responds to the customer.
+
+
+
+
+
+
+Customer raises issue with the cognitive agent. Here customer has lost his Amex and raising the same as an issue with bank.
+
+
+Cognitive agent processes this message using Watson Natural language classifier and Watson Rank and retrive. 
+Natural language classifier helps understand the issues as related to Cards system.
+while Rank and retrive can assist to find out the process to resolve card issues. As next step rank and retirve asked for customer id to invoke Cards robot.
+
+
+
+Based on customer id. Cognitive agent has invoked cards robot who has fetched customer cards details.
+
+This customer has mutiple cards and cards robot is looking for confirmation to block the appropriate card.
+
+
+User is looking to block all the cards.
+
+
+Cards robot could take his requst and immediately blocked all his cards. It has provided customer a reference number for future tracking.
+
+Customer is glad with the quick help.
+
+You can see all the emotions on right side of the screen. Customer was sad when he reported loss of cards however he looks happy after blocking all the cards and quicke assitance from cognitive agent.
+
+Thats all in the demo. Thanks

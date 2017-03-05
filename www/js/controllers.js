@@ -97,7 +97,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
         if ($scope.data.message !== undefined) {
             $scope.messages.push({
-                image: 'img/arya.jpg',
+                image: 'img/sansa.jpg',
                 userId: '12345',
                 text: $scope.data.message,
                 time: d
@@ -111,24 +111,24 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             var progValHappy = 0;
             var progValAngry = 0;
             var progValSad = 0;
-            var nlcOutput = "";
-            
-                BarclaysService.nlcOutput($scope.data.message).then(function(customerService){
-                    $scope.typing = false;
-                    var cardText = '';
-                    nlcOutput = customerService.topClass;
-                   
-                    
-                }, function(err) {
-                    $scope.typing = false;
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: 'Unfortunately there was some problem with server. I m still learning.',
-                        time: d
-                    });
+            var nlcOutput = "CARDS";
+            /*var globalCust = "7345365001";*/
+            $scope.typing = true;
+            BarclaysService.nlcOutput($scope.data.message).then(function(customerService) {
+                var cardText = '';
+                if (customerService.topClass === 'CARDS') {
+                    $scope.nlcOutput = customerService.topClass;
+                }
+                $ionicScrollDelegate.scrollBottom(true);
+                startAnalysis($scope.messages);
+            }, function(err) {
+                $scope.messages.push({
+                    image: 'img/icon.png',
+                    userId: '54321',
+                    text: 'Unfortunately there was some problem with server. I m still learning.',
+                    time: d
                 });
-            
+            });
             BarclaysService.calltoneAnalyzer($scope.custMessage).then(function(toneAnalyzerResp) {
                 for (var i = 0; i < toneAnalyzerResp.emotionTone.length; i++) {
                     if (toneAnalyzerResp.emotionTone[i].name === 'Joy') {
@@ -147,6 +147,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         $scope.text = getEmotion(toneAnalyzerResp.emotionTone[i].name);
                     }
                 }
+
                 function getEmotion(emtVal) {
                     var emj = "";
                     emj += (emtVal === 'Sadness') ? ":disappointed:" : '';
@@ -156,6 +157,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     emj += (emtVal === 'Joy') ? ":smile:" : '';
                     return emj;
                 }
+
                 function starthappyProgress(maxVal) {
                     $scope.progValHappy = 0;
                     $scope.happyInterval = $interval(function() {
@@ -165,6 +167,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         }
                     }, 50);
                 }
+
                 function startSadProgress(maxVal) {
                     $scope.progValSad = 0;
                     $scope.sadInterval = $interval(function() {
@@ -174,6 +177,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                         }
                     }, 50);
                 }
+
                 function startAngryProgress(maxVal) {
                     $scope.progValAngry = 0;
                     $scope.angryInterval = $interval(function() {
@@ -190,199 +194,199 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     template: 'There is some proble to call API!'
                 });
             });
-            if ($scope.data.message.toLowerCase().includes('details')) {
-                $scope.typing = true;
-                BarclaysService.fetchCustDetails().then(function(custDetails) {
-                    $scope.typing = false;
-                    var accountDetails = "";
-                    for (var i = 0; i < custDetails.accountList.length; i++) {
-                        accountDetails += "<div class='row'><strong>" + custDetails.accountList[i].accountType + "</strong></div>" + "<div class='row'><strong>A/c no:</strong>" + custDetails.accountList[i].id + "</div>" + "<div class='row'><strong>Bal:</strong>" + custDetails.accountList[i].currentBalance + "</div>"
-                    }
-                    var tabelresp = "Customer Details <BR> " + "<div class='row'><div class='col header'>Customer Name</div><div class='col'>" + custDetails.title + " " + custDetails.firstName + " " + custDetails.lastName + "</div></div>" + "<div class='row'><div class='col'>Contact Details</div><div class='col'>" + custDetails.mobileNo + "</div></div>" + "<div class='row'><div class='col'>DOB</div><div class='col'>" + new Date(custDetails.dateOfBirth) + "</div></div>" + "<div class='row'><div class='col'>Customer Address</div><div class='col'>" + custDetails.address.street + ", " + custDetails.address.town + "<br> " + custDetails.address.postalCode + ", " + custDetails.address.country + "</div></div>" + "<div class='row'><div class='col'>Customer Accounts</div><div class='col'>" + accountDetails + "</div>";
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: tabelresp,
-                        time: d
-                    });
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
-                    $scope.typing = false;
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'failed!',
-                        template: 'There is some proble to call API!'
-                    });
-                });
-            } else if ($scope.data.message.toLowerCase().includes('trans')) {
-                $scope.typing = true;
-                BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
-                    $scope.typing = false;
-                    var tabelresp = "Transaction Details <BR> " + "<div class='row'><div class='col'>Transuction ID</div><div class='col'>" + transDetails.id + "</div></div>" + "<div class='row'><div class='col'>Money In</div><div class='col'>" + transDetails.amount.moneyIn + "</div></div>" + "<div class='row'><div class='col'>Money Out</div><div class='col'>" + transDetails.amount.moneyOut + "</div></div>" + "<div class='row'><div class='col'>Payment Method</div><div class='col'>" + transDetails.paymentMethod + "</div></div>" + "<div class='row'><div class='col'>Balance After Transaction <BR></div><div class='col'>" + transDetails.accountBalanceAfterTransaction.amount + "</div></div>";
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: tabelresp,
-                        time: d
-                    });
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
-                    $scope.typing = false;
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'failed!',
-                        template: 'There is some proble to call API!'
-                    });
-                });
-            } else if ($scope.data.message.toLowerCase().includes('acc')) {
-                $scope.typing = true;
-                BarclaysService.fetchAccountsDetails().then(function(accDetails) {
-                    $scope.typing = false;
-                    var tabelresp = "Account Details <BR> " + "<div class='row'><div class='col'>Account ID</div><div class='col'>" + accDetails.id + "</div></div>" + "<div class='row'><div class='col'>Account Type</div><div class='col'>" + accDetails.accountType + "</div></div>" + "<div class='row'><div class='col'>Account Description</div><div class='col'>" + accDetails.description + "</div></div>" + "<div class='row'><div class='col'>Account Card Number</div><div class='col'>" + accDetails.card.cardNumber + "</div></div>" + "<div class='row'><div class='col'>Account Card Current Balance</div><div class='col'>" + accDetails.card.currentBalance + "</div></div>" + "<div class='row'><div class='col'>Account Card Type<BR></div><div class='col'>" + accDetails.card.type + "</div></div>";
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: tabelresp,
-                        time: d
-                    });
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
-                    $scope.typing = false;
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'failed!',
-                        template: 'There is some proble to call API!'
-                    });
-                });
-            } /*else if ($scope.data.message.toLowerCase().includes('loss') || $scope.data.message.toLowerCase().includes('lost') || $scope.data.message.toLowerCase().includes('wallet')) {
-                $scope.typing = false;
-                var tabelresp = "I see that your complaint is related to Cards <BR> <BR> Can I get your customer ID? (Prefix @ before customer ID)";
-                $scope.messages.push({
-                    image: 'img/icon.png',
-                    userId: '54321',
-                    text: tabelresp,
-                    time: d
-                });
-            } */else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11 && nlcOutput === "CARDS") {
-                $scope.typing = true;
-                var indexOfTo = $scope.data.message.indexOf("@");
-                var custId = $scope.data.message.substring(indexOfTo + 1);
-                BarclaysService.callCustomerDetails(custId).then(function(customerService) {
-                    $scope.typing = false;
-                    var cardText = '';
-                    for (var i = 0; i < customerService.length; i++) {
-                        cardText += customerService[i].cardNumber + ' / ';
-                    }
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: 'Can you confim which of the '+ customerService.length  +' cards, ' + cardText + 'to block? ((Prefix @ before Card Number))',
-                        time: d
-                    });
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
-                    $scope.typing = false;
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: 'Unfortunately there was some problem with server. Im still learning.',
-                        time: d
-                    });
-                });
-            } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11) {
-            	var indexOfTo = $scope.data.message.indexOf("@");
-                var cardNum = $scope.data.message.substring(indexOfTo + 1);
-                $scope.typing = false;
-                BarclaysService.blockCustomerCard(cardNum).then(function(customerService) {
-                    $scope.typing = false;
-                    var cardText = '';
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: customerService.message,
-                        time: d
-                    });
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
-                    $scope.typing = false;
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: 'Unfortunately there was some problem with server. Im still learning.',
-                        time: d
-                    });
-                });
-            } else if ($scope.data.message.toLowerCase().includes('all')) {
-                $scope.typing = false;
-                BarclaysService.blockCustomerCard().then(function(customerService) {
-                    $scope.typing = false;
-                    var cardText = '';
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: customerService.message,
-                        time: d
-                    });
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
-                    $scope.typing = false;
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: 'Unfortunately there was some problem with server. Im still learning.',
-                        time: d
-                    });
-                });
-            } else {
-                $scope.typing = true;
-                BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
-                    if (watsonReply.output.text[0].includes('?')) {
-                        $scope.typing = true;
-                        BarclaysService.rnrDetails(watsonReply.output.text[0]).then(function(customerService) {
-                            $scope.typing = false;
-                            var cardText = '';
-                            var cardTitle = customerService.title;
-                            var nextStep = customerService.nextStep;
-                            var htmlContent =  '<B>' + customerService.title + '</B>' + customerService.contentHtml + '<BR>' + customerService.nextStep;
-                            $scope.messages.push({
-                                image: 'img/icon.png',
-                                userId: '54321',
-                                text: htmlContent,
-                                time: d
-                            });
-                            $ionicScrollDelegate.scrollBottom(true);
-                        }, function(err) {
-                            $scope.typing = false;
-                            $scope.messages.push({
-                                image: 'img/icon.png',
-                                userId: '54321',
-                                text: 'Unfortunately there was some problem with server. Im still learning.',
-                                time: d
-                            });
+
+            function startAnalysis() {
+                if ($scope.data.message.toLowerCase().includes('details')) {
+                    $scope.typing = true;
+                    BarclaysService.fetchCustDetails().then(function(custDetails) {
+                        $scope.typing = false;
+                        var accountDetails = "";
+                        for (var i = 0; i < custDetails.accountList.length; i++) {
+                            accountDetails += "<div class='row'><strong>" + custDetails.accountList[i].accountType + "</strong></div>" + "<div class='row'><strong>A/c no:</strong>" + custDetails.accountList[i].id + "</div>" + "<div class='row'><strong>Bal:</strong>" + custDetails.accountList[i].currentBalance + "</div>"
+                        }
+                        var tabelresp = "Customer Details <BR> " + "<div class='row'><div class='col header'>Customer Name</div><div class='col'>" + custDetails.title + " " + custDetails.firstName + " " + custDetails.lastName + "</div></div>" + "<div class='row'><div class='col'>Contact Details</div><div class='col'>" + custDetails.mobileNo + "</div></div>" + "<div class='row'><div class='col'>DOB</div><div class='col'>" + new Date(custDetails.dateOfBirth) + "</div></div>" + "<div class='row'><div class='col'>Customer Address</div><div class='col'>" + custDetails.address.street + ", " + custDetails.address.town + "<br> " + custDetails.address.postalCode + ", " + custDetails.address.country + "</div></div>" + "<div class='row'><div class='col'>Customer Accounts</div><div class='col'>" + accountDetails + "</div>";
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: tabelresp,
+                            time: d
                         });
-                    } 
-                    else{
-                    	
-                    	$scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: watsonReply.output.text,
-                        time: d
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'failed!',
+                            template: 'There is some proble to call API!'
+                        });
                     });
-                    	
-                    }
-                    $ionicScrollDelegate.scrollBottom(true);
-                }, function(err) {
+                } else if ($scope.data.message.toLowerCase().includes('trans')) {
+                    $scope.typing = true;
+                    BarclaysService.fetchTansuctionsDetails().then(function(transDetails) {
+                        $scope.typing = false;
+                        var tabelresp = "Transaction Details <BR> " + "<div class='row'><div class='col'>Transuction ID</div><div class='col'>" + transDetails.id + "</div></div>" + "<div class='row'><div class='col'>Money In</div><div class='col'>" + transDetails.amount.moneyIn + "</div></div>" + "<div class='row'><div class='col'>Money Out</div><div class='col'>" + transDetails.amount.moneyOut + "</div></div>" + "<div class='row'><div class='col'>Payment Method</div><div class='col'>" + transDetails.paymentMethod + "</div></div>" + "<div class='row'><div class='col'>Balance After Transaction <BR></div><div class='col'>" + transDetails.accountBalanceAfterTransaction.amount + "</div></div>";
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: tabelresp,
+                            time: d
+                        });
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'failed!',
+                            template: 'There is some proble to call API!'
+                        });
+                    });
+                } else if ($scope.data.message.toLowerCase().includes('acc')) {
+                    $scope.typing = true;
+                    BarclaysService.fetchAccountsDetails().then(function(accDetails) {
+                        $scope.typing = false;
+                        var tabelresp = "Account Details <BR> " + "<div class='row'><div class='col'>Account ID</div><div class='col'>" + accDetails.id + "</div></div>" + "<div class='row'><div class='col'>Account Type</div><div class='col'>" + accDetails.accountType + "</div></div>" + "<div class='row'><div class='col'>Account Description</div><div class='col'>" + accDetails.description + "</div></div>" + "<div class='row'><div class='col'>Account Card Number</div><div class='col'>" + accDetails.card.cardNumber + "</div></div>" + "<div class='row'><div class='col'>Account Card Current Balance</div><div class='col'>" + accDetails.card.currentBalance + "</div></div>" + "<div class='row'><div class='col'>Account Card Type<BR></div><div class='col'>" + accDetails.card.type + "</div></div>";
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: tabelresp,
+                            time: d
+                        });
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'failed!',
+                            template: 'There is some proble to call API!'
+                        });
+                    });
+                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11 && $scope.nlcOutput === "CARDS") { /*&& nlcOutput === "CARDS" */
+                    $scope.typing = true;
+                    var indexOfTo = $scope.data.message.indexOf("@");
+                    $scope.custId = $scope.data.message.substring(indexOfTo + 1);
+                    /*globalCust = custId;*/
+                    BarclaysService.callCustomerDetails($scope.custId).then(function(customerService) {
+                        $scope.typing = false;
+                        var cardText = '';
+                        for (var i = 0; i < customerService.length; i++) {
+                            cardText += customerService[i].cardNumber + ' / ';
+                        }
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'Can you confim which of the ' + customerService.length + ' cards, ' + cardText + 'to block? ((Prefix @ before Card Number))',
+                            time: d
+                        });
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'Unfortunately there was some problem with server. Im still learning.',
+                            time: d
+                        });
+                    });
+                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11) {
+                    var indexOfTo = $scope.data.message.indexOf("@");
+                    var cardNum = $scope.data.message.substring(indexOfTo + 1);
                     $scope.typing = false;
-                    $scope.messages.push({
-                        image: 'img/icon.png',
-                        userId: '54321',
-                        text: 'Unfortunately there was some proble with server. Im still learning.',
-                        time: d
+                    BarclaysService.blockCustomerCard(cardNum).then(function(customerService) {
+                        $scope.typing = false;
+                        var cardText = '';
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: customerService.message,
+                            time: d
+                        });
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'Unfortunately there was some problem with server. Im still learning.',
+                            time: d
+                        });
                     });
-                });
+                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.toLowerCase().includes('all')) {
+                    $scope.typing = false;
+                    BarclaysService.blockCustomerCard($scope.custId).then(function(customerService) {
+                        $scope.typing = false;
+                        var cardText = '';
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: customerService.message,
+                            time: d
+                        });
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'Unfortunately there was some problem with server. Im still learning.',
+                            time: d
+                        });
+                    });
+                } else {
+                    $scope.typing = true;
+                    BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
+                        $scope.typing = false;
+                        if (watsonReply.output.text[0].includes('?')) {
+                            $scope.typing = true;
+                            BarclaysService.rnrDetails(watsonReply.output.text[0]).then(function(customerService) {
+                                $scope.typing = false;
+                                var cardText = '';
+                                var cardTitle = customerService.title;
+                                var nextStep = customerService.nextStep;
+                                var htmlContent = '<B>' + customerService.title + '</B>' + customerService.contentHtml + '<BR>' + customerService.nextStep;
+                                $scope.messages.push({
+                                    image: 'img/icon.png',
+                                    userId: '54321',
+                                    text: htmlContent,
+                                    time: d
+                                });
+                                $ionicScrollDelegate.scrollBottom(true);
+                            }, function(err) {
+                                $scope.typing = false;
+                                $scope.messages.push({
+                                    image: 'img/icon.png',
+                                    userId: '54321',
+                                    text: 'Unfortunately there was some problem with server. Im still learning.',
+                                    time: d
+                                });
+                            });
+                            $scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: "I see your complaint is related to blockage of CARDS . Let me fetch the process to perfom this action.",
+                                time: d
+                            });
+                        } else {
+                            $scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: watsonReply.output.text,
+                                time: d
+                            });
+                        }
+                        $ionicScrollDelegate.scrollBottom(true);
+                    }, function(err) {
+                        $scope.typing = false;
+                        $scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'Unfortunately there was some proble with server. Im still learning.',
+                            time: d
+                        });
+                    });
+                }
+                delete $scope.data.message;
+                $ionicScrollDelegate.scrollBottom(true);
+                document.getElementById("message_input").focus();
             }
         }
-        delete $scope.data.message;
-        $ionicScrollDelegate.scrollBottom(true);
-        document.getElementById("message_input").focus();
+
     };
     $scope.inputUp = function() {
         if (isIOS) $scope.data.keyboardHeight = 216;

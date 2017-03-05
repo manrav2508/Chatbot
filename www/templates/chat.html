@@ -1,25 +1,5 @@
 <ion-view view-title="Chat">
- 
    <ion-content ng-class="{expanded:isExpanded}" >
-      <div class="list half" style="max-height:600px;height:auto !important;height:500px;overflow:auto;overflow-x:hidden;" id="scroll"> 
-	      <div  class="card card-gallery item item-text-wrap">
-		      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
-		         <div class="talktext">
-		            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
-		            <p ng-bind-html="message.text"></p>
-		            <div class="pull-left ">
-		               <i class="icon balanced ion-clock"></i> {{message.time}}
-		            </div>
-		         </div>
-		      </div>
-		      <div ng-show="typing" class="talk-bubble tri-right lefttop">
-		         <div class="talktext">
-		            <img class="avatar left" src="img/icon.png"></img>
-		            <div> Typing..... </div>
-		         </div>
-		      </div>
-		  </div>
-      </div>
       <div class="list half">
            <div  class="card card-gallery item item-text-wrap">
                <div class="ink dark-bg">
@@ -47,6 +27,25 @@
                </div>
            </div>
        </div>
+       <div class="list half"> 
+	      <div  class="card card-gallery item item-text-wrap">
+		      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
+		         <div class="talktext">
+		            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
+		            <p ng-bind-html="message.text"></p>
+		            <div class="pull-left ">
+		               <i class="icon balanced ion-clock"></i> {{message.time}}
+		            </div>
+		         </div>
+		      </div>
+		      <div ng-show="typing" class="talk-bubble tri-right lefttop">
+		         <div class="talktext">
+		            <img class="avatar left" src="img/icon.png"></img>
+		            <div> Typing..... </div>
+		         </div>
+		      </div>
+		  </div>
+      </div>
    </ion-content>
    <button  event-focus="click" event-focus-id="message_input" ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">
    		<i class="icon ion-android-send"></i>
