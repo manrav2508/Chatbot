@@ -42,7 +42,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var rnrDetails = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec7cx29-rank-2023?queryString=' + text,
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec74x28-rank-2037?queryString=' + text,
                 method: 'GET',
             }
             $http(req).then(function(data) {

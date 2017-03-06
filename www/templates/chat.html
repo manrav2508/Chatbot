@@ -1,6 +1,7 @@
 <ion-view view-title="Chat">
    <ion-content ng-class="{expanded:isExpanded}" >
-      <div class="list half">
+      <div class="list half" id="toneResponse">
+      <div id="emptyDiv" style=""></div>
            <div  class="card card-gallery item item-text-wrap">
                <div class="ink dark-bg">
                    <h2>Emoticons</h2><img class="avatar left" src="img/sansa.jpg"></img><br>
@@ -28,7 +29,7 @@
            </div>
        </div>
        <div class="list half"> 
-	      <div  class="card card-gallery item item-text-wrap" ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
+	      <div id="message" class="card card-gallery item item-text-wrap" ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
 		      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
 		         <div class="talktext item item-avatar item-text-wrap">
 		            <div><img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img></div><br>
@@ -45,6 +46,7 @@
 		         </div>
 		      </div>
 		  </div>
+		  <a id="bottom"></a>
       </div>
    </ion-content>
    <button  event-focus="click" event-focus-id="message_input" ng-click="sendMessage()" id="fab-profile" class="button button-fab button-fab-bottom-right button-balanced pane" nav-view="active" style="transform: translate3d(0%, 0px, 0px);">

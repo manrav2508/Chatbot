@@ -71,7 +71,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
-}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService, $interval) {
+}).controller('ChatCtrl', function($scope, $stateParams, $ionicPopup, $timeout,$location, $anchorScroll,ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate, BarclaysService, $interval) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -90,7 +90,6 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
         isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.typing = false;
     $scope.sendMessage = function() {
-        //BarclaysService.scrollTo('bottom');
         $ionicScrollDelegate.scrollBottom(true);
         alternate = !alternate;
         var d = new Date();
@@ -114,21 +113,25 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             var nlcOutput = "CARDS";
             /*var globalCust = "7345365001";*/
             $scope.typing = true;
-            BarclaysService.nlcOutput($scope.data.message).then(function(customerService) {
-                var cardText = '';
-                if (customerService.topClass.toUpperCase() === 'CARDS' || customerService.topClass.toUpperCase() === 'PAYMENTS') {
-                    $scope.nlcOutput = customerService.topClass.toUpperCase();
-                }
-                $ionicScrollDelegate.scrollBottom(true);
-                startAnalysis($scope.messages);
-            }, function(err) {
-                $scope.messages.push({
-                    image: 'img/icon.png',
-                    userId: '54321',
-                    text: 'Unfortunately there was some problem with server. I m still learning.',
-                    time: d
+            if(!$scope.data.message.toLowerCase().includes('@') && !$scope.data.message.toLowerCase().includes('#') && !$scope.data.message.toLowerCase().includes('$')) {
+            	BarclaysService.nlcOutput($scope.data.message).then(function(customerService) {
+                    var cardText = '';
+                    if (customerService.topClass.toUpperCase() === 'CARDS' || customerService.topClass.toUpperCase() === 'PAYMENTS') {
+                        $scope.nlcOutput = customerService.topClass.toUpperCase();
+                    }
+                    $ionicScrollDelegate.scrollBottom(true);
+                    startAnalysis($scope.messages);
+                }, function(err) {
+                    $scope.messages.push({
+                        image: 'img/icon.png',
+                        userId: '54321',
+                        text: 'Unfortunately there was some problem with server. I m still learning.',
+                        time: d
+                    });
                 });
-            });
+            } else{
+            	startAnalysis($scope.messages);
+            }
             BarclaysService.calltoneAnalyzer($scope.custMessage).then(function(toneAnalyzerResp) {
                 for (var i = 0; i < toneAnalyzerResp.emotionTone.length; i++) {
                     if (toneAnalyzerResp.emotionTone[i].name === 'Joy') {
@@ -257,24 +260,35 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                             template: 'There is some proble to call API!'
                         });
                     });
-                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11 && $scope.nlcOutput === "CARDS") { /*&& nlcOutput === "CARDS" */
+                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11 && $scope.nlcOutput === "CARDS") { 
                     $scope.typing = true;
                     var indexOfTo = $scope.data.message.indexOf("@");
                     $scope.custId = $scope.data.message.substring(indexOfTo + 1);
                     /*globalCust = custId;*/
                     BarclaysService.callCustomerDetails($scope.custId).then(function(customerService) {
                         $scope.typing = false;
-                        var cardText = '';
-                        for (var i = 0; i < customerService.length; i++) {
-                            cardText += customerService[i].cardNumber + ' / ';
+                        if(customerService.length > 0) {
+                        	var cardText = '';
+                            for (var i = 0; i < customerService.length; i++) {
+                                cardText += customerService[i].cardNumber + ' / ';
+                            }
+                            $scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'I can see you have '+customerService.length+' cards.<br><br> Can you confim which of the cards, ' + cardText + ' to block? <br>(Prefix @ before Card Number)',
+                                time: d
+                            });
+                            $ionicScrollDelegate.scrollBottom(true);
+                        } else{
+                        	$scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'Invalid customer id, Please input your customer id prefix with @',
+                                time: d
+                            });
+                            $ionicScrollDelegate.scrollBottom(true);
                         }
-                        $scope.messages.push({
-                            image: 'img/icon.png',
-                            userId: '54321',
-                            text: 'Can you confim which of the ' + customerService.length + ' cards, ' + cardText + 'to block? ((Prefix @ before Card Number))',
-                            time: d
-                        });
-                        $ionicScrollDelegate.scrollBottom(true);
+                        
                     }, function(err) {
                         $scope.typing = false;
                         $scope.messages.push({
@@ -284,20 +298,31 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                             time: d
                         });
                     });
-                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11) {
+                } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11 && $scope.nlcOutput === "CARDS") {
                     var indexOfTo = $scope.data.message.indexOf("@");
                     var cardNum = $scope.data.message.substring(indexOfTo + 1);
                     $scope.typing = false;
                     BarclaysService.blockCustomerCard(cardNum,'Card').then(function(customerService) {
                         $scope.typing = false;
-                        var cardText = '';
-                        $scope.messages.push({
-                            image: 'img/icon.png',
-                            userId: '54321',
-                            text: customerService.message,
-                            time: d
-                        });
-                        $ionicScrollDelegate.scrollBottom(true);
+                        if(customerService.message!== null){
+                        	var cardText = '';
+                            $scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: customerService.message,
+                                time: d
+                            });
+                            $ionicScrollDelegate.scrollBottom(true);
+                        } else{
+                        	$scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: customerService.errorReason,
+                                time: d
+                            });
+                            $ionicScrollDelegate.scrollBottom(true);
+                        }
+                        
                     }, function(err) {
                         $scope.typing = false;
                         $scope.messages.push({
@@ -328,12 +353,88 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                             time: d
                         });
                     });
-                } else {
+                } else if($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length === 11 && $scope.nlcOutput === "PAYMENTS") {
+                	$scope.typing = true;
+                	$timeout( function(){ 
+                		$scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'I can see you have two accounts -  558830081771 / 564738987564 <BR> <BR> Please select / input your acount number prefix with @',
+                            time: d
+                        });
+                		$scope.typing = false;
+                	}, 3000);
+                } 
+                else if($scope.data.message.toLowerCase().includes('@') && $scope.data.message.length > 11 && $scope.nlcOutput === "PAYMENTS") {
+                	$scope.typing = true;
+                	var indexOfTo = $scope.data.message.indexOf("@");
+                    $scope.AccountNum = ($scope.data.message.substring(indexOfTo + 1) === '558830081771' || $scope.data.message.substring(indexOfTo + 1) === '564738987564') ? $scope.data.message.substring(indexOfTo + 1) : null;
+                    if($scope.AccountNum !== null) {
+                    	$timeout( function(){ 
+                    		$scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'There are 3 beneficiary associated with Account - '+$scope.AccountNum +' <BR><br> #1 Vodaphone <br> #2 Vedant Recidency <br> #3 XYZ <BR><BR> to continue please enter your option with prefix #, for eg to select 1st option enter <b> #1 </b>',
+                                time: d
+                            });
+                    		$scope.typing = false;
+                    	}, 3000);
+                    }else {
+                    	$timeout( function(){ 
+                    		$scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'Invalid account number, Please select / input your acount number prefix with @',
+                                time: d
+                            });
+                    		$scope.typing = false;
+                    	}, 3000);
+                    }
+                }
+                else if($scope.data.message.toLowerCase().includes('#') && $scope.data.message.length === 2 && $scope.nlcOutput === "PAYMENTS") {
+                	$scope.typing = true;
+                	var indexOfTo = $scope.data.message.indexOf("#");
+                    $scope.optionNo = ($scope.data.message.substring(indexOfTo + 1) === '1' || $scope.data.message.substring(indexOfTo + 1) === '2' ||  $scope.data.message.substring(indexOfTo + 1) === '3') ? $scope.data.message.substring(indexOfTo + 1) : null;
+                    if($scope.optionNo !== null) {
+                    	$scope.beneficiaryName = ($scope.optionNo==='1') ? 'Vodaphone' :($scope.optionNo==='2') ? 'Vedant Recidency' : 'xyz';
+                    	$timeout( function(){ 
+                    		$scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'You have selected - '+$scope.beneficiaryName+' <BR>Please enter amount <BR><br> (Please prefix $ before amount)',
+                                time: d
+                            });
+                    		$scope.typing = false;
+                    	}, 3000);
+                    }else {
+                    	$timeout( function(){ 
+                    		$scope.messages.push({
+                                image: 'img/icon.png',
+                                userId: '54321',
+                                text: 'Invalid Option entered, please enter your option with prefix #',
+                                time: d
+                            });
+                    		$scope.typing = false;
+                    	}, 3000);
+                    }
+                 }else if($scope.data.message.toLowerCase().includes('$') && $scope.nlcOutput === "PAYMENTS") {
+                	$scope.typing = true;
+                	$timeout( function(){ 
+                		$scope.messages.push({
+                            image: 'img/icon.png',
+                            userId: '54321',
+                            text: 'Payment for the beneficiary '+$scope.beneficiaryName+' was tried to be executed by the bank but was rejected by the beneficiary bank due to account not present <br>  <br> The payment will be retried again today, You may also contact the beneficiary to confirm the details and avoid any delays.',
+                            time: d
+                        });
+                		$scope.typing = false;
+                	}, 3000);
+                }else {
                     $scope.typing = true;
                     BarclaysService.callWatsonAPI($scope.data.message).then(function(watsonReply) {
                         $scope.typing = false;
                         if (watsonReply.output.text[0].includes('?')) {
                             $scope.typing = true;
+                            if($scope.nlcOutput === "PAYMENT" ){}
                             BarclaysService.rnrDetails(watsonReply.output.text[0]).then(function(customerService) {
                                 $scope.typing = false;
                                 var cardText = '';
@@ -363,11 +464,11 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                                       text: "I see your complaint is related to blockage of CARDS. Let me fetch the process to perfom this action.",
                                       time: d
                                   });
-                            } else if($scope.nlcOutput === "PAYMENT" ) {
+                            } else if($scope.nlcOutput === "PAYMENTS" ) {
                             	$scope.messages.push({
                                     image: 'img/icon.png',
                                     userId: '54321',
-                                    text: "I see your complaint is related of PAYMENT. Let me fetch the process to perfom this action.",
+                                    text: "I see your complaint is related to PAYMENT. Let me fetch the process to perfom this action.",
                                     time: d
                                 });
                             }
@@ -396,7 +497,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 document.getElementById("message_input").focus();
             }
         }
-
+        document.getElementById('emptyDiv').style.height = document.getElementById('message').clientHeight-50 +'px';
     };
     $scope.inputUp = function() {
         if (isIOS) $scope.data.keyboardHeight = 216;
