@@ -374,7 +374,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     		$scope.messages.push({
                                 image: 'img/icon.png',
                                 userId: '54321',
-                                text: 'There are 3 beneficiary associated with Account - '+$scope.AccountNum +' <BR><br> #1 Vodaphone <br> #2 Vedant Recidency <br> #3 XYZ <BR><BR> to continue please enter your option with prefix #, for eg to select 1st option enter <b> #1 </b>',
+                                text: 'There are 3 beneficiary associated with Account - '+$scope.AccountNum +' <BR><br> #1 Vodafone <br> #2 Vedant Recidency  <br> #3 ICICI Credit Card -********6470 <BR><BR> to continue please enter your option with prefix #, for eg to select 1st option enter <b> #1 </b>',
                                 time: d
                             });
                     		$scope.typing = false;
@@ -396,7 +396,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                 	var indexOfTo = $scope.data.message.indexOf("#");
                     $scope.optionNo = ($scope.data.message.substring(indexOfTo + 1) === '1' || $scope.data.message.substring(indexOfTo + 1) === '2' ||  $scope.data.message.substring(indexOfTo + 1) === '3') ? $scope.data.message.substring(indexOfTo + 1) : null;
                     if($scope.optionNo !== null) {
-                    	$scope.beneficiaryName = ($scope.optionNo==='1') ? 'Vodaphone' :($scope.optionNo==='2') ? 'Vedant Recidency' : 'xyz';
+                    	$scope.beneficiaryName = ($scope.optionNo==='1') ? 'Vodafone' :($scope.optionNo==='2') ? 'Vedant Recidency' : 'ICICI Credit Card -********6470';
                     	$timeout( function(){ 
                     		$scope.messages.push({
                                 image: 'img/icon.png',
