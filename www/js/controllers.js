@@ -116,8 +116,8 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
             $scope.typing = true;
             BarclaysService.nlcOutput($scope.data.message).then(function(customerService) {
                 var cardText = '';
-                if (customerService.topClass === 'CARDS') {
-                    $scope.nlcOutput = customerService.topClass;
+                if (customerService.topClass.toUpperCase() === 'CARDS' || customerService.topClass.toUpperCase() === 'PAYMENTS') {
+                    $scope.nlcOutput = customerService.topClass.toUpperCase();
                 }
                 $ionicScrollDelegate.scrollBottom(true);
                 startAnalysis($scope.messages);
@@ -288,7 +288,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     var indexOfTo = $scope.data.message.indexOf("@");
                     var cardNum = $scope.data.message.substring(indexOfTo + 1);
                     $scope.typing = false;
-                    BarclaysService.blockCustomerCard(cardNum).then(function(customerService) {
+                    BarclaysService.blockCustomerCard(cardNum,'Card').then(function(customerService) {
                         $scope.typing = false;
                         var cardText = '';
                         $scope.messages.push({
@@ -309,7 +309,7 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                     });
                 } else if ($scope.data.message.toLowerCase().includes('@') && $scope.data.message.toLowerCase().includes('all')) {
                     $scope.typing = false;
-                    BarclaysService.blockCustomerCard($scope.custId).then(function(customerService) {
+                    BarclaysService.blockCustomerCard($scope.custId,"All").then(function(customerService) {
                         $scope.typing = false;
                         var cardText = '';
                         $scope.messages.push({
@@ -356,12 +356,22 @@ angular.module('rbbr').controller('AppCtrl', function($scope, $ionicModal, $ioni
                                     time: d
                                 });
                             });
-                            $scope.messages.push({
-                                image: 'img/icon.png',
-                                userId: '54321',
-                                text: "I see your complaint is related to blockage of CARDS . Let me fetch the process to perfom this action.",
-                                time: d
-                            });
+                            if($scope.nlcOutput === "CARDS" ) {
+                            	  $scope.messages.push({
+                                      image: 'img/icon.png',
+                                      userId: '54321',
+                                      text: "I see your complaint is related to blockage of CARDS. Let me fetch the process to perfom this action.",
+                                      time: d
+                                  });
+                            } else if($scope.nlcOutput === "PAYMENT" ) {
+                            	$scope.messages.push({
+                                    image: 'img/icon.png',
+                                    userId: '54321',
+                                    text: "I see your complaint is related of PAYMENT. Let me fetch the process to perfom this action.",
+                                    time: d
+                                });
+                            }
+                          
                         } else {
                             $scope.messages.push({
                                 image: 'img/icon.png',

@@ -28,11 +28,11 @@
            </div>
        </div>
        <div class="list half"> 
-	      <div  class="card card-gallery item item-text-wrap">
+	      <div  class="card card-gallery item item-text-wrap" ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
 		      <div ng-repeat="message in messages" class="talk-bubble tri-right " ng-class="{lefttop: message.userId=='54321' , btmright:message.userId=='12345' }">
-		         <div class="talktext">
-		            <img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img>
-		            <p ng-bind-html="message.text"></p>
+		         <div class="talktext item item-avatar item-text-wrap">
+		            <div><img class="avatar " ng-class="{left: message.userId=='54321' , right:message.userId=='12345' }"  src="{{message.image}}"></img></div><br>
+		            <div ng-bind-html="message.text"></div>
 		            <div class="pull-left ">
 		               <i class="icon balanced ion-clock"></i> {{message.time}}
 		            </div>

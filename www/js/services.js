@@ -42,7 +42,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var rnrDetails = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec7cx29-rank-1081?queryString=' + text,
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/searchAndRank/Process/rank/1eec7cx29-rank-2023?queryString=' + text,
                 method: 'GET',
             }
             $http(req).then(function(data) {
@@ -134,7 +134,7 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
     var nlcOutput = function(text) {
         return $q(function(resolve, reject) {
             var req = {
-                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/nlc/4d5c10x177-nlc-1789/classify?text=' + text,
+                url: 'https://rtoneanalyzer.mybluemix.net/v0.1/nlc/90e7b7x198-nlc-303/classify?text=' + text,
                 method: 'GET',
                 headers: {
                     "content-type": "application/json",
@@ -151,10 +151,11 @@ angular.module('rbbr').service('BarclaysService', function($q, $http) {
             });
         });
     };
-    var blockCustomerCard = function(text) {
+    var blockCustomerCard = function(text, caseParams) {
         return $q(function(resolve, reject) {
+        	var caseFor =(caseParams === 'All' ) ? 'blockCards' :'blockCard';
             var req = {
-                url: 'https://anshuspringmvc.mybluemix.net/blockCards/' + text,
+                url: 'https://anshuspringmvc.mybluemix.net/'+caseFor+'/'+ text,
                 method: 'GET',
                 headers: {
                     "content-type": "application/json",
